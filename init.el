@@ -11,6 +11,9 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load-file custom-file)
 
+;; amx support can be found in file `swiper/counsel.el`
+(use-package amx)
+
 (use-package benchmark-init
   :config
   ;; To disable collection of benchmark data after init is done.
@@ -43,9 +46,18 @@
   (diminish 'undo-tree-mode "UT"))
 
 (use-package evil
+  ;; Note: You should enable global-evil-leader-mode before you enable evil-mode,
+  ;; otherwise evil-leader won’t be enabled in initial buffers (*scratch*, *Messages*, …).
+  :after evil-leader
   :config
   ;;(evil-define-key 'normal evil-motion-state-map (kbd "C-i") nil)
   (evil-mode))
+
+(use-package evil-leader
+  :config
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key "y" 'youdao-dictionary-search-at-point)
+  (global-evil-leader-mode))
 
 (use-package highlight-parentheses
   :config
@@ -119,6 +131,8 @@
   (setq which-key-idle-delay 0.5)
   (which-key-setup-side-window-right)
   (which-key-mode))
+
+(use-package youdao-dictionary)
 
 ;; Terminal
 (when (eq window-system nil)
