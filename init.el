@@ -19,6 +19,9 @@
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
+(use-package dumb-jump
+  :config (setq dumb-jump-selector 'ivy))
+
 (use-package company
   :diminish "C"
   :hook (after-init . global-company-mode)
@@ -26,6 +29,12 @@
 
 (use-package company-lsp
   :config (push 'company-lsp company-backends))
+
+(use-package company-quickhelp
+  :config (company-quickhelp-mode))
+
+(use-package ws-butler
+  :config (ws-butler-global-mode))
 
 (use-package company-statistics
   :config (company-statistics-mode))
@@ -37,10 +46,18 @@
 (use-package undo-tree
   :diminish "UT")
 
+(use-package restart-emacs)
+
+(use-package hl-todo
+  :config (global-hl-todo-mode))
+
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook))
 
+(use-package editorconfig
+  :diminish
+  :config (editorconfig-mode))
 
 (use-package evil
   ;; Note: You should enable global-evil-leader-mode before you enable evil-mode,
@@ -53,7 +70,14 @@
 (use-package evil-leader
   :config
   (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key "y" 'youdao-dictionary-search-at-point)
+  (evil-leader/set-key
+    "b" 'org-brain-visualize
+    "y" 'youdao-dictionary-search-at-point
+    "SPC" 'ace-jump-mode
+    "jj" 'dumb-jump-go
+    "jo" 'dumb-jump-go-other-window
+    "jb" 'dumb-jump-back
+    )
   (global-evil-leader-mode))
 
 (use-package highlight-parentheses
@@ -97,6 +121,9 @@
   :config (add-to-list 'company-backends 'company-anaconda))
 
 (use-package org-cliplink)
+
+(use-package org-mind-map
+  :init (require 'ox-org))
 
 (use-package projectile
   :config
@@ -158,12 +185,19 @@
 (use-package window-numbering
   :config (window-numbering-mode))
 
+(use-package ace-window
+  :bind ("M-o" . ace-window))
+
 (use-package youdao-dictionary)
 
 (use-package zoom
   :config
   (setq zoom-size '(80 . 28))
   (zoom-mode))
+
+(use-package paradox)
+
+(use-package ace-jump-mode)
 
 ;; Terminal
 (when (eq window-system nil))
