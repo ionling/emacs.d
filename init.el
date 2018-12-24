@@ -32,6 +32,10 @@
 (use-package counsel
   :config (counsel-mode))
 
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
+
 (use-package diminish
   :after
   (highlight-parentheses indent-guide ivy)
@@ -79,6 +83,10 @@
 ;;(use-package org)
   ;;:config (define-key org-mode-map (kbd "TAB") 'org-cycle))
 
+(use-package org-brain
+  :init
+  (setq org-brain-path "~/desktop/brain"))
+
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
 
@@ -92,6 +100,9 @@
 
 (use-package company-anaconda
   :config (add-to-list 'company-backends 'company-anaconda))
+
+(use-package org-cliplink)
+
 (use-package projectile
   :config
   (projectile-mode)
@@ -152,6 +163,11 @@
   :config (window-numbering-mode))
 
 (use-package youdao-dictionary)
+
+(use-package zoom
+  :config
+  (setq zoom-size '(80 . 28))
+  (zoom-mode))
 
 ;; Terminal
 (when (eq window-system nil))
