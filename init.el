@@ -82,6 +82,16 @@
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
 
+;; Python
+(use-package anaconda-mode
+  :after python
+  :hook
+  (python-mode . anaconda-mode)
+  (python-mode . anaconda-eldoc-mode)
+  )
+
+(use-package company-anaconda
+  :config (add-to-list 'company-backends 'company-anaconda))
 (use-package projectile
   :config
   (projectile-mode)
