@@ -99,12 +99,20 @@
   :config
   (setq olivetti-body-width 100))
 
-;;(use-package org)
-  ;;:config (define-key org-mode-map (kbd "TAB") 'org-cycle))
+(use-package org
+  :config
+  (setq org-plantuml-jar-path
+	(expand-file-name "plantuml.1.2018.13.jar" org-directory))
+  (org-babel-do-load-languages
+        'org-babel-load-languages
+        '((emacs-lisp . t)
+          (python . t)
+          (plantuml . t))))
 
 (use-package org-brain
-  :init
-  (setq org-brain-path "~/desktop/brain"))
+  :config
+  (setq org-id-locations-file
+	(expand-file-name ".org-id-locations" org-brain-path)))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
@@ -177,10 +185,11 @@
   (which-key-mode))
 
 (use-package whitespace
+  :diminish global-whitespace-mode
   :config
   (delete 'newline-mark whitespace-style)
-  (delete 'space-mark whitespace-style)
-  (global-whitespace-mode))
+  (delete 'spaces whitespace-style)
+  (delete 'space-mark whitespace-style))
 
 (use-package window-numbering
   :config (window-numbering-mode))
@@ -240,13 +249,6 @@
 
 (global-hl-line-mode +1)
 
-;; TODO: Use whitespace-mode
-;; trailing whitespace
-(setq-default show-trailing-whitespace t)
-;; Refactor with dolist
-(add-hook 'buffer-menu-mode-hook (lambda () (setq show-trailing-whitespace nil)))
-(add-hook 'eww-mode-hook (lambda () (setq show-trailing-whitespace nil)))
-(add-hook 'eshell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
 (server-start)
 
 (setq gc-cons-threshold default-gc-cons-threshold)
