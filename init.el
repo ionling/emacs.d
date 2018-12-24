@@ -132,16 +132,27 @@
   (which-key-setup-side-window-right)
   (which-key-mode))
 
+(use-package whitespace
+  :config
+  (delete 'newline-mark whitespace-style)
+  (delete 'space-mark whitespace-style)
+  (global-whitespace-mode))
+
+(use-package window-numbering
+  :config (window-numbering-mode))
+
 (use-package youdao-dictionary)
 
 ;; Terminal
-(when (eq window-system nil)
-  )
+(when (eq window-system nil))
 
-;; GUI mode
-(when window-system
-  ;; Window width
-  (set-frame-width (selected-frame) 130))
+(when (display-graphic-p)
+  (window-divider-mode 0)
+  (scroll-bar-mode 0)
+  (tool-bar-mode 0)
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Size-Parameters.html#Size-Parameters
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized)))
+
 
 
 ;; Font
@@ -160,8 +171,8 @@
                     (font-spec :family "Source Han Sans SC" :size 15)))
 
 (global-hl-line-mode +1)
-(tool-bar-mode -1)
 
+;; TODO: Use whitespace-mode
 ;; trailing whitespace
 (setq-default show-trailing-whitespace t)
 ;; Refactor with dolist
