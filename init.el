@@ -199,6 +199,18 @@
 
 (use-package ace-jump-mode)
 
+(use-package flyspell
+  :diminish "FS"
+  :hook (prog-mode . flyspell-prog-mode)
+  :config
+  (setq ispell-dictionary "en"))
+
+(use-package flycheck
+  :config (global-flycheck-mode))
+
+(use-package flycheck-popup-tip
+  :hook (flycheck-mode . flycheck-popup-tip-mode))
+
 ;; Terminal
 (when (eq window-system nil))
 
