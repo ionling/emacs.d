@@ -20,6 +20,7 @@
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package company
+  :diminish "C"
   :hook (after-init . global-company-mode)
   :config (setq company-idle-delay 0.1))
 
@@ -30,24 +31,16 @@
   :config (company-statistics-mode))
 
 (use-package counsel
+  :diminish
   :config (counsel-mode))
+
+(use-package undo-tree
+  :diminish "UT")
 
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook))
 
-(use-package diminish
-  :after
-  (highlight-parentheses indent-guide ivy)
-  :config
-  (diminish 'company-mode "C")
-  (diminish 'counsel-mode)
-  (diminish 'eldoc-mode "E")
-  (diminish 'highlight-parentheses-mode)
-  (diminish 'indent-guide-mode)
-  (diminish 'ivy-mode)
-  (diminish 'lsp-mode "L")
-  (diminish 'undo-tree-mode "UT"))
 
 (use-package evil
   ;; Note: You should enable global-evil-leader-mode before you enable evil-mode,
@@ -64,6 +57,7 @@
   (global-evil-leader-mode))
 
 (use-package highlight-parentheses
+  :diminish
   :config
   (global-highlight-parentheses-mode))
 
@@ -71,6 +65,7 @@
   :config (indent-guide-global-mode))
 
 (use-package ivy
+  :diminish
   :config
   (ivy-mode)
   (setq ivy-count-format "(%d/%d) "))
@@ -148,6 +143,7 @@
   :config (global-set-key (kbd "C-s") 'swiper))
 
 (use-package which-key
+  :diminish
   :config
   (setq which-key-idle-delay 0.5)
   (which-key-setup-side-window-right)
