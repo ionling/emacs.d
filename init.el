@@ -223,32 +223,19 @@
 ;; Terminal
 (when (eq window-system nil))
 
-(when (display-graphic-p)
-  (window-divider-mode 0)
-  (scroll-bar-mode 0)
-  (tool-bar-mode 0)
-  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Size-Parameters.html#Size-Parameters
-  (add-to-list 'initial-frame-alist '(fullscreen . maximized)))
+
+(setq default-frame-alist
+'((font . "Hack-11")
+  (fullscreen . maximized)))
 
 
 
-;; Font
-;; 等距更纱黑体 SC
-;; Fira Code
-;; 方正黑体_GBK
-;; STFangsong
-;; Noto Mono
-;; Noto Sans Mono
-;; MF JiaHei (Noncommercial)
-;; MF ManYu (Noncommercial)
-(set-frame-font "Fira Code-11")
+(global-hl-line-mode)
+(scroll-bar-mode 0)
+(tool-bar-mode 0)
+(window-divider-mode 0)
 
-(dolist (charset '(kana han symbol cjk-misc bopomofo))
-  (set-fontset-font (frame-parameter nil 'font) charset
-                    (font-spec :family "Source Han Sans SC" :size 15)))
-
-(global-hl-line-mode +1)
-
-(server-start)
+(if (not (or (daemonp) (server-running-p)))
+    (server-start))
 
 (setq gc-cons-threshold default-gc-cons-threshold)
