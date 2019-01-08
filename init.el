@@ -99,24 +99,6 @@
   :config
   (setq olivetti-body-width 100))
 
-(use-package org
-  :config
-  (setq org-plantuml-jar-path
-	(expand-file-name "plantuml.1.2018.13.jar" org-directory))
-  (org-babel-do-load-languages
-        'org-babel-load-languages
-        '((emacs-lisp . t)
-          (python . t)
-          (plantuml . t))))
-
-(use-package org-brain
-  :config
-  (setq org-id-locations-file
-	(expand-file-name ".org-id-locations" org-brain-path)))
-
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode))
-
 ;; Python
 (use-package anaconda-mode
   :after python
@@ -127,11 +109,6 @@
 
 (use-package company-anaconda
   :config (add-to-list 'company-backends 'company-anaconda))
-
-(use-package org-cliplink)
-
-(use-package org-mind-map
-  :init (require 'ox-org))
 
 (use-package projectile
   :config
@@ -219,6 +196,9 @@
 
 (use-package flycheck-popup-tip
   :hook (flycheck-mode . flycheck-popup-tip-mode))
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(require 'init-org)
 
 ;; Terminal
 (when (eq window-system nil))
