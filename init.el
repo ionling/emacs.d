@@ -67,6 +67,21 @@
   ;;(evil-define-key 'normal evil-motion-state-map (kbd "C-i") nil)
   (evil-mode))
 
+(defhydra hydra-resize ()
+  "resize"
+  ("h" (lambda ()
+         (interactive)
+         (shrink-window-horizontally 10)))
+  ("l" (lambda ()
+         (interactive)
+         (enlarge-window-horizontally 10)))
+  ("j" (lambda ()
+         (interactive)
+         (shrink-window 4)))
+  ("k" (lambda ()
+         (interactive)
+         (enlarge-window 4))))
+
 (use-package evil-leader
   :config
   (evil-leader/set-leader "<SPC>")
@@ -77,6 +92,7 @@
     "jj" 'dumb-jump-go
     "jo" 'dumb-jump-go-other-window
     "jb" 'dumb-jump-back
+    "r" #'hydra-resize/body
     )
   (global-evil-leader-mode))
 
