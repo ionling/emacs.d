@@ -86,13 +86,26 @@
   :config
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    "b" 'org-brain-visualize
-    "y" 'youdao-dictionary-search-at-point
-    "SPC" 'ace-jump-mode
+    "b" 'ivy-switch-buffer
+    "cog" #'counsel-org-goto
+    "cg" #'counsel-git
+    "ci" #'counsel-imenu
+    "cp" #'counsel-git-grep
+    "e" #'edit-user-init-file
+    "f" #'counsel-fzf
+    "i" 'imenu-list
     "jj" 'dumb-jump-go
     "jo" 'dumb-jump-go-other-window
     "jb" 'dumb-jump-back
+    "l" #'ace-link
+    "oa" #'org-agenda
+    "oci" #'org-clock-in
+    "oco" #'org-clock-out
+    "ol" #'org-cliplink
     "r" #'hydra-resize/body
+    "w" 'org-brain-goto                 ; w: wiki
+    "y" 'youdao-dictionary-search-at-point
+    "SPC" #'avy-goto-word-1
     )
   (global-evil-leader-mode))
 
