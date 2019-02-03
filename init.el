@@ -227,6 +227,7 @@
   :hook (flycheck-mode . flycheck-popup-tip-mode))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 (require 'init-org)
 
 ;; Terminal
