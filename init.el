@@ -197,18 +197,10 @@
   (delete 'spaces whitespace-style)
   (delete 'space-mark whitespace-style))
 
-(use-package window-numbering
-  :config (window-numbering-mode))
-
 (use-package ace-window
   :bind ("M-o" . ace-window))
 
 (use-package youdao-dictionary)
-
-(use-package zoom
-  :config
-  (setq zoom-size '(80 . 28))
-  (zoom-mode))
 
 (use-package paradox)
 
