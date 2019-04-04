@@ -5,8 +5,8 @@
   :config
   (setq org-plantuml-jar-path
 	(expand-file-name "plantuml.1.2018.13.jar" org-directory))
-  (setq org-todo-keywords '((sequence "TODO" "DOING" "DONE")))
-  (setq org-todo-keyword-faces '(("DOING" . "purple")))
+  (setq org-todo-keywords '((sequence "TODO" "DOING" "|" "DONE" "ABORT(a)")))
+  (setq org-todo-keyword-faces '(("DOING" . "purple") ("ABORT" . "sea green")))
   (org-babel-do-load-languages
         'org-babel-load-languages
         '((emacs-lisp . t)
