@@ -198,7 +198,8 @@
   (delete 'space-mark whitespace-style))
 
 (use-package ace-window
-  :bind ("M-o" . ace-window))
+  :bind ("M-o" . ace-window)
+  :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 (use-package youdao-dictionary)
 
