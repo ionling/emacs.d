@@ -1,0 +1,1 @@
+My personal Emacs config based on =use-package=, =evil= and =counsel=.
