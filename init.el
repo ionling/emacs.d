@@ -128,17 +128,6 @@
   :config
   (setq olivetti-body-width 100))
 
-;; Python
-(use-package anaconda-mode
-  :after python
-  :hook
-  (python-mode . anaconda-mode)
-  (python-mode . anaconda-eldoc-mode)
-  )
-
-(use-package company-anaconda
-  :config (add-to-list 'company-backends 'company-anaconda))
-
 (use-package projectile
   :config
   (projectile-mode)
@@ -222,6 +211,7 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 (require 'init-org)
+(require 'init-python)
 
 ;; Terminal
 (when (eq window-system nil))
