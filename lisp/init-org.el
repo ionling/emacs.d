@@ -1,7 +1,9 @@
 ;;; Commentary:
 ;;; Code:
 (use-package org
-  :init (require 'org-man)
+  :init
+  (require 'org-man)
+  (require 'org-re-reveal)
   :config
   (setq org-plantuml-jar-path
 	(expand-file-name "plantuml.1.2018.13.jar" org-directory))
