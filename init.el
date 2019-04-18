@@ -67,12 +67,21 @@
   ;;(evil-define-key 'normal evil-motion-state-map (kbd "C-i") nil)
   (evil-mode))
 
+
 (use-package evil-surround
   :config
   (global-evil-surround-mode))
 
-(defhydra hydra-resize ()
-  "resize"
+(defhydra hydra-window ()
+  "
+^  ^Size^         ^^Switch
+---------------------------------
+^    _k_          ^_n_ext
+^    ^↑^          ^_p_revious
+_h_ ←   → _l_      _d_elete
+^    ^↓
+^    _j_
+"
   ("h" (lambda ()
          (interactive)
          (shrink-window-horizontally 10)))
@@ -84,7 +93,14 @@
          (shrink-window 4)))
   ("k" (lambda ()
          (interactive)
-         (enlarge-window 4))))
+         (enlarge-window 4)))
+  ("n" other-window)
+  ("p" (lambda ()
+         (interactive)
+         (other-window -1)))
+  ("d" delete-window)
+  )
+
 
 (defun edit-user-init-file ()
   "Edit the `user-init-file', in another window."
@@ -95,7 +111,7 @@
   :config
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    "b" 'ivy-switch-buffer
+    "bg" #'org-brain-goto
     "cog" #'counsel-org-goto
     "cg" #'counsel-git
     "ci" #'counsel-imenu
@@ -111,8 +127,8 @@
     "oci" #'org-clock-in
     "oco" #'org-clock-out
     "ol" #'org-cliplink
-    "r" #'hydra-resize/body
-    "w" 'org-brain-goto                 ; w: wiki
+    "s" #'ivy-switch-buffer
+    "w" #'hydra-window/body
     "y" 'youdao-dictionary-search-at-point
     "SPC" #'avy-goto-word-1
     )
