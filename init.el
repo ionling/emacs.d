@@ -117,11 +117,22 @@
 (use-package indent-guide
   :config (indent-guide-global-mode))
 
+(use-package highlight-symbol
+  :hook
+  (prog-mode . highlight-symbol-mode)
+  :config
+  (setq highlight-symbol-idle-delay 0)
+  )
+
 (use-package ivy
   :diminish
   :config
   (ivy-mode)
   (setq ivy-count-format "(%d/%d) "))
+
+(use-package ivy-rich
+  :config
+  (ivy-rich-mode))
 
 (use-package olivetti
   ;; :hook (org-mode . olivetti-mode)
