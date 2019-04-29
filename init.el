@@ -74,12 +74,12 @@
 
 (defhydra hydra-window ()
   "
-^  ^Size^         ^^Switch
----------------------------------
-^    _k_          ^_n_ext
-^    ^↑^          ^_p_revious
-_h_ ←   → _l_      _d_elete
-^    ^↓
+^  ^Size^         ^^Switch^       ^Split
+--------------------------------------------
+^    _k_          ^_n_ext         _v_ertical
+^    ^↑^          ^_p_revious     _x_ horizontal
+_h_ ←   → _l_      _s_elect
+^    ^↓^          ^_d_elete
 ^    _j_
 "
   ("h" (lambda ()
@@ -99,6 +99,9 @@ _h_ ←   → _l_      _d_elete
          (interactive)
          (other-window -1)))
   ("d" delete-window)
+  ("s" ace-select-window)
+  ("v" split-window-right)
+  ("x" split-window-below)
   )
 
 
