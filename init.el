@@ -219,6 +219,22 @@ _h_ ←   → _l_      _s_elect
   (setq doom-modeline-minor-modes t)
   )
 
+(use-package all-the-icons)
+
+(use-package doom-themes
+  :config
+  (doom-themes-visual-bell-config)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config)
+  )
+
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :custom
+  (doom-modeline-buffer-file-name-style 'buffer-name)
+  (doom-modeline-icon t)
+  )
+
 (use-package swiper
   :config (global-set-key (kbd "C-s") 'swiper))
 
