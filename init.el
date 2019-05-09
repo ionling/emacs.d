@@ -255,6 +255,11 @@ _h_ ←   → _l_      _s_elect
   :config
   (xclip-mode))
 
+(use-package pangu-spacing
+  :custom
+  (pangu-spacing-real-insert-separtor t)
+  )
+
 (use-package flyspell
   :diminish "FS"
   :hook (prog-mode . flyspell-prog-mode)
