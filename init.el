@@ -196,6 +196,10 @@
 
 (use-package ace-jump-mode)
 
+(use-package xclip
+  :config
+  (xclip-mode))
+
 (use-package flyspell
   :diminish "FS"
   :hook (prog-mode . flyspell-prog-mode)
