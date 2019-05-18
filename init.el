@@ -232,12 +232,14 @@
 (when (eq window-system nil))
 
 
+(set-default 'indent-tabs-mode nil)
 (setq default-frame-alist
 '((font . "Hack-11")
   (fullscreen . maximized)))
 
 
 
+(global-auto-revert-mode)
 (global-hl-line-mode)
 (scroll-bar-mode 0)
 (tool-bar-mode 0)
