@@ -257,6 +257,9 @@ _h_ ←   → _l_      _s_elect
   (delete 'spaces whitespace-style)
   (delete 'space-mark whitespace-style))
 
+(use-package avy)
+(use-package ace-link)
+
 (use-package ace-window
   :bind ("M-o" . ace-window)
   :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
