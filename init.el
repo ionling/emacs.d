@@ -183,6 +183,11 @@
 (use-package swiper
   :config (global-set-key (kbd "C-s") 'swiper))
 
+(use-package wakatime-mode
+  :diminish
+  :config
+  (global-wakatime-mode))
+
 (use-package which-key
   :diminish
   :config
