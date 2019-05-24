@@ -17,6 +17,9 @@
   :hook (python-mode . pipenv-mode)
   )
 
+(use-package py-isort
+  :hook (before-save . py-isort-before-save))
+
 (use-package yapfify
   :hook (python-mode . yapf-mode)
   )
