@@ -1,7 +1,8 @@
 ;; Speed up startup
-(setq garbage-collection-messages t)
-(defvar default-gc-cons-threshold gc-cons-threshold)
-(setq gc-cons-threshold (* 100 1024 1024))
+(setq gc-cons-threshold-original gc-cons-threshold)
+(setq gc-cons-threshold (* 1024 1024 27))
+(setq file-name-handler-alist-original file-name-handler-alist)
+(setq file-name-handler-alist nil)
 
 (require 'package)
 (add-to-list 'package-archives
@@ -322,4 +323,11 @@ _h_ ←   → _l_      _s_elect
 (if (not (or (daemonp) (server-running-p)))
     (server-start))
 
-(setq gc-cons-threshold default-gc-cons-threshold)
+(run-with-idle-timer
+ 4 nil
+ (lambda ()
+   (setq gc-cons-threshold gc-cons-threshold-original)
+   (setq file-name-handler-alist file-name-handler-alist-original)
+   (makunbound 'gc-cons-threshold-original)
+   (makunbound 'file-name-handler-alist-original)
+   (message "gc-cons-threshold and file-name-handler-alist restored")))
