@@ -52,6 +52,12 @@
   :config (global-hl-todo-mode))
 
 (use-package dashboard
+  :custom
+  (dashboard-banner-logo-title "Welcome to Emacs, Ling")
+  (dashboard-center-content  t)
+  (dashboard-items '((recents  . 8)
+                     (agenda . 6)))
+  (initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   :config
   (dashboard-setup-startup-hook))
 
