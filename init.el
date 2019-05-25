@@ -86,6 +86,11 @@
          (interactive)
          (enlarge-window 4))))
 
+(defun edit-user-init-file ()
+  "Edit the `user-init-file', in another window."
+  (interactive)
+  (find-file-other-window user-init-file))
+
 (use-package evil-leader
   :config
   (evil-leader/set-leader "<SPC>")
