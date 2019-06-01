@@ -81,11 +81,11 @@
 
 (defhydra hydra-window ()
   "
-^  ^Size^         ^^Switch^       ^Split
---------------------------------------------
-^    _k_          ^_n_ext         _v_ertical
-^    ^↑^          ^_p_revious     _x_ horizontal
-_h_ ←   → _l_      _s_elect
+^  ^Size^         ^^Switch^       ^Split^            ^Buffer      | Window |
+^--^----^---------^^------^-------^-----^------------^------------+--------+
+^    _k_          ^_n_ext         _v_ertical         _b_ switch
+^    ^↑^          ^_p_revious     _x_ horizontal     _k_ kill
+_h_ ←   → _l_      _s_elect       ^ ^                _r_ recentf
 ^    ^↓^          ^_d_elete
 ^    _j_
 "
@@ -109,6 +109,9 @@ _h_ ←   → _l_      _s_elect
   ("s" ace-select-window)
   ("v" split-window-right)
   ("x" split-window-below)
+  ("b" ivy-switch-buffer)
+  ("k" kill-current-buffer)
+  ("r" counsel-recentf)
   )
 
 
