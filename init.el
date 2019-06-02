@@ -303,6 +303,7 @@ _h_ ←   → _l_      _s_elect       ^ ^                _r_ recentf
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(require 'init-ledger)
 (require 'init-org)
 (require 'init-python)
 
