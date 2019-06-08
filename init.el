@@ -152,9 +152,6 @@ _h_ ←   → _l_      _s_elect       ^ ^                _r_ recentf
   :config
   (global-highlight-parentheses-mode))
 
-(use-package indent-guide
-  :config (indent-guide-global-mode))
-
 (use-package highlight-symbol
   :hook
   (prog-mode . highlight-symbol-mode)
