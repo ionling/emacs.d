@@ -237,9 +237,10 @@ _h_ ←   → _l_      _s_elect       ^ ^                _r_ recentf
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
-  :custom
-  (doom-modeline-buffer-file-name-style 'buffer-name)
-  (doom-modeline-icon t)
+  :config
+  (setq doom-modeline-buffer-file-name-style 'buffer-name)
+  (setq doom-modeline-icon t)
+  (setq doom-modeline-minor-modes t)
   )
 
 (use-package swiper
