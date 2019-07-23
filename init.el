@@ -120,6 +120,16 @@ _h_ ←   → _l_      _s_elect       ^ ^                _r_ recentf
   (interactive)
   (find-file-other-window user-init-file))
 
+
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (let ((file-name (buffer-file-name)))
+    (if file-name
+        (message file-name)
+      (message "Wow, no file name."))))
+
+
 (use-package evil-leader
   :config
   (evil-leader/set-leader "<SPC>")
