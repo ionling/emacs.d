@@ -324,8 +324,10 @@ _h_ ←   → _l_      _s_elect       ^ ^                _r_ recentf
 '((font . "Hack-11")
   (fullscreen . maximized)))
 
+(setq column-number-indicator-zero-based nil)
 
 
+(column-number-mode)
 (global-auto-revert-mode)
 (global-hl-line-mode)
 (scroll-bar-mode 0)
