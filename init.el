@@ -67,6 +67,10 @@
   ;;(evil-define-key 'normal evil-motion-state-map (kbd "C-i") nil)
   (evil-mode))
 
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode))
+
 (defhydra hydra-resize ()
   "resize"
   ("h" (lambda ()
