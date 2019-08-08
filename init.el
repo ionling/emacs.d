@@ -293,8 +293,9 @@ _h_ ←   → _l_      _s_elect       ^ ^                _r_ recentf
   (xclip-mode))
 
 (use-package pangu-spacing
-  :custom
-  (pangu-spacing-real-insert-separtor t)
+  :hook (org-mode . pangu-spacing-mode)
+  :config
+  (setq pangu-spacing-real-insert-separtor t)
   )
 
 (use-package flyspell
