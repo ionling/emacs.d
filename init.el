@@ -183,11 +183,22 @@
 (use-package smartparens
   :config (smartparens-global-mode))
 
-(use-package spaceline
+(use-package all-the-icons)
+
+(use-package doom-themes
   :config
-  (spaceline-spacemacs-theme)
-  (setq powerline-default-separator 'wave)
-  (spaceline-compile))
+  (doom-themes-visual-bell-config)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config)
+  )
+
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :config
+  (setq doom-modeline-buffer-file-name-style 'buffer-name)
+  (setq doom-modeline-icon t)
+  (setq doom-modeline-minor-modes t)
+  )
 
 (use-package swiper
   :config (global-set-key (kbd "C-s") 'swiper))
