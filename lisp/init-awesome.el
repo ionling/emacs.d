@@ -28,7 +28,8 @@
 
   (use-package ace-pinyin
     :delight
-    :init (ace-pinyin-global-mode)))
+    :defer 2
+    :config (ace-pinyin-global-mode)))
 
 
 (v-defmodule ivy
