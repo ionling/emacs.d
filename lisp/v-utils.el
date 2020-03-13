@@ -54,6 +54,14 @@
         (kill-buffer)))))
 
 
+(defun make-temp-file-and-buffer (extension)
+  "Create a temporary file with EXTENSION and open it."
+  (interactive (list (read-string "File extension: ")))
+  (->> (concat "." extension)
+       (make-temp-file "" nil)
+       find-file))
+
+
 ;;;###autoload
 (defun doom/sudo-find-file (file)
   "Open FILE as root."
