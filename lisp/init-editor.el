@@ -2,6 +2,12 @@
 ;;; Commentary:
 ;;; Code:
 
+;;;; Better defaults
+(set-default 'fill-column 80)
+(setq column-number-indicator-zero-based nil)
+(setq make-backup-files nil)
+
+
 ;;;; Autosave
 (use-package focus-autosave-mode
   :delight
@@ -11,7 +17,7 @@
 
 ;;;; Buffer
 (use-package ibuffer
-  :bind ("C-x C-b" . #'ibuffer))
+  :bind ("C-x C-b" . ibuffer))
 
 
 ;;;; Editor server
@@ -20,6 +26,19 @@
   :config
   (if (not (or (daemonp) (server-running-p)))
       (server-start)))
+
+
+;;;; Fill paragraph
+(use-package aggressive-fill-paragraph
+  :hook (org-mode . aggressive-fill-paragraph-mode))
+
+
+;;;; Indent
+(set-default 'indent-tabs-mode nil)
+
+(use-package aggressive-indent
+  :defer 3
+  :config (global-aggressive-indent-mode))
 
 
 ;;;; Paren edit
@@ -31,7 +50,7 @@
 
 ;;;; Region
 (use-package expand-region
-  :bind ("C-=" . #'er/expand-region))
+  :bind ("C-=" . er/expand-region))
 
 
 ;;;; Scrolling
