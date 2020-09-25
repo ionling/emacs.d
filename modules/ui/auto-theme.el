@@ -1,10 +1,13 @@
+(require 'use-package)
+
 (defcustom v-dark-theme 'doom-one
   "Default dark theme."
-  :type '(boolean)
+  :type '(symbol)
   :group 'v-ui)
 
 (defcustom v-light-theme 'doom-one-light
   "Default light theme."
+  :type '(symbol)
   :group 'v-ui)
 
 
@@ -16,7 +19,8 @@
 
 
 (use-package circadian
-  :ustom
+  :if window-system
+  :custom
   (circadian-themes `((:sunrise . ,v-light-theme)
                       (:sunset  . ,v-dark-theme)))
   :hook (emacs-startup . circadian-setup))

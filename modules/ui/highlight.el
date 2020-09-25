@@ -22,7 +22,7 @@
   :config (global-highlight-parentheses-mode))
 
 
-(use-package hl-line
+(use-package hl-line :ensure nil
   :defer 6
   :config (global-hl-line-mode))
 
