@@ -34,7 +34,7 @@
 (v-load doom-ui treemacs tabs
         company dumb-jump flycheck git lsp
         restclient
-        elisp javascript org python html xml yaml)
+        elisp javascript org html xml yaml)
 
 (require 'v-modules)
 
@@ -58,5 +58,10 @@
 
 
 (load-file v-autoload-file)
+
+
+(quelpa '(v-python :fetcher file
+                   :path "~/.emacs.d/v"))
+
 
 ;;; init.el ends here
