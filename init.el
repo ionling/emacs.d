@@ -42,8 +42,6 @@
 (bootstrap :ui
            auto-theme
            highlight
-           :lang
-           go
            :tools
            avy
            ivy)
@@ -60,8 +58,14 @@
 (load-file v-autoload-file)
 
 
-(quelpa '(v-python :fetcher file
-                   :path "~/.emacs.d/v"))
+(quelpa '(v :fetcher file :path "~/.emacs.d/v"))
+
+
+(defun bootstrap2 ()
+  (v-golang))
+
+
+(add-hook 'emacs-startup-hook #'bootstrap2)
 
 
 ;;; init.el ends here
