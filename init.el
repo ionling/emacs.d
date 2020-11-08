@@ -58,10 +58,14 @@
 (load-file v-autoload-file)
 
 
-(quelpa '(v :fetcher file :path "~/.emacs.d/v"))
+(defun v-golang ()
+  "Load `v-golang' package."
+  (quelpa '(v-golang :fetcher file :path "~/.emacs.d/v/v-golang.el"))
+  (v-golang-config))
 
 
 (defun v-python ()
+  "Load `v-python' package."
   (interactive)
   (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
   (v-python-config))
