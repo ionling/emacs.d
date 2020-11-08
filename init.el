@@ -61,6 +61,12 @@
 (quelpa '(v :fetcher file :path "~/.emacs.d/v"))
 
 
+(defun v-python ()
+  (interactive)
+  (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
+  (v-python-config))
+
+
 (defun bootstrap2 ()
   (v-golang))
 

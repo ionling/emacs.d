@@ -1,36 +1,51 @@
 ;;; v-python.el --- vision python config           -*- lexical-binding: t -*-
+
+;; Author: Vision Ling
+;; Homepage: https://github.com/ionling/emacs.d
+;; Keywords: configuration
+;; Package-Requires: (python python-black pipenv py-isort lsp-mode lsp-python-ms)
+
 ;;; Commentary:
+
 ;;; Code:
 
+(require 'lsp-python-ms)
+(require 'py-isort)
+(require 'python-black)
+(require 'use-package)
+
+
 ;;;###autoload
-(defun v-python ()
+(defun v-python-config ()
   "Load python config."
   (interactive)
-  (use-package python :ensure nil
-    :config
-    ;; https://stackoverflow.com/a/14033335/7134763
-    (define-coding-system-alias 'UTF-8 'utf-8)
-    (setq-local v-format-func #'v-python-format
-                v-sort-imports-func #'v-python-sort-imports))
+  (eval
+   '(progn
+      (use-package python
+        :config
+        ;; https://stackoverflow.com/a/14033335/7134763
+        (define-coding-system-alias 'UTF-8 'utf-8)
+        (setq-local v-format-func #'v-python-format
+                    v-sort-imports-func #'v-python-sort-imports))
 
-  (use-package pipenv
-    :delight " Pe"
-    :hook (python-mode . pipenv-mode)
-    :init
-    (advice-add 'pipenv-activate :after #'v-python-fix-lsp-ms-cmd))
+      (use-package pipenv
+        :delight " Pe"
+        :hook (python-mode . pipenv-mode)
+        :init
+        (advice-add 'pipenv-activate :after #'v-python-fix-lsp-ms-cmd))
 
-  (use-package py-isort)
+      (use-package py-isort)
 
-  (use-package python-black
-    :delight python-black-on-save-mode
-    :hook (python-mode . python-black-on-save-mode))
+      (use-package python-black
+        :delight python-black-on-save-mode
+        :hook (python-mode . python-black-on-save-mode))
 
-  (use-package lsp-python-ms
-    :hook
-    (python-mode
-     . (lambda ()
-         (require 'lsp-python-ms)
-         (lsp-deferred)))))
+      (use-package lsp-python-ms
+        :hook
+        (python-mode
+         . (lambda ()
+             (require 'lsp-python-ms)
+             (lsp-deferred)))))))
 
 
 ;; From https://www.snip2code.com/Snippet/127022/Emacs-auto-remove-unused-import-statemen
