@@ -58,6 +58,12 @@
 (load-file v-autoload-file)
 
 
+(defun v-complete ()
+  "Load `v-complete' package."
+  (quelpa '(v-complete :fetcher file :path "~/.emacs.d/v/v-complete.el"))
+  (v-complete-config))
+
+
 (defun v-golang ()
   "Load `v-golang' package."
   (quelpa '(v-golang :fetcher file :path "~/.emacs.d/v/v-golang.el"))
@@ -72,10 +78,17 @@
 
 
 (defun bootstrap2 ()
+  (v-complete)
   (v-golang))
 
 
 (add-hook 'emacs-startup-hook #'bootstrap2)
+
+
+;;;; Emacs
+
+(use-package edit-list :ensure nil
+  :quelpa (edit-list :fetcher file :path "~/.emacs.d/site-lisp/edit-list.el"))
 
 
 ;;;; Input method
