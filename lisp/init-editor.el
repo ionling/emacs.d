@@ -45,7 +45,11 @@
 (use-package smartparens
   :delight
   :defer 3
-  :config (smartparens-global-mode))
+  :config
+  (require 'smartparens-config)         ; Load default config
+  (smartparens-global-mode)
+  ;; https://i.loli.net/2020/12/28/SIGCO29ZDX6wBYl.gif
+  (show-smartparens-global-mode))
 
 
 ;;;; Region
