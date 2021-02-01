@@ -2,9 +2,10 @@
 
 mkdir -p ~/.emacs.d
 
-cmd='readlink -f'
-ln -is $($cmd init.el) ~/.emacs.d/init.el
-ln -is $($cmd core) ~/.emacs.d/
-ln -is $($cmd lisp) ~/.emacs.d/
-ln -is $($cmd v) ~/.emacs.d/
-ln -is $($cmd modules) ~/.emacs.d/
+files=(init.el better-prog-theme.el core lisp site-lisp v modules)
+
+for f in ${files[@]}; do
+    if test $(realpath $f) != $(realpath ~/.emacs.d/$f); then
+        ln -si `realpath $f` ~/.emacs.d/
+    fi
+done
