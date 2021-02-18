@@ -24,6 +24,13 @@
   (setq pangu-spacing-real-insert-separtor t))
 
 
+;; https://i.loli.net/2021/02/18/6JTOmoUdvt5yf1w.gif
+(use-package volatile-highlights
+  :delight
+  :defer 4
+  :config (volatile-highlights-mode))
+
+
 
 (v-defmodule doom-ui
   (use-package doom-themes
