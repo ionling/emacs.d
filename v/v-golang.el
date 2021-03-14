@@ -50,5 +50,14 @@
     (popwin:popup-buffer buffer-name)))
 
 
+(defun v-go-shorten-lines ()
+  "Shorten long lines in current file."
+  (interactive)
+  (save-buffer)
+  (shell-command
+   (format "golines --no-reformat-tags -m %s -w %s"
+           fill-column buffer-file-name)))
+
+
 (provide 'v-golang)
 ;;; v-golang.el ends here
