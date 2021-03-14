@@ -9,6 +9,7 @@
 
 ;;; Code:
 
+(require 'go-playground)
 (require 'popwin)
 (require 'projectile)
 (require 'use-package)
@@ -31,6 +32,27 @@
       (use-package gotest)
 
       (use-package go-playground))))
+
+
+(defun v-go-playground-browse (paste)
+  "Browse selected PASTE."
+  (interactive
+   (->> go-playground-basedir
+     f-directories
+     (-map (lambda (d) (f-base d)))
+     (completing-read "Paste: ")
+     list))
+
+  (find-file (f-join go-playground-basedir paste "snippet.go")))
+
+
+(defun v-go-playground-count ()
+  "Show go playground pastes count."
+  (interactive)
+  (->> go-playground-basedir
+    f-directories
+    length
+    (message "Total %s pastes")))
 
 
 (defun v-go-swag-init ()
