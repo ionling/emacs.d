@@ -78,6 +78,8 @@
 
 
 (defun bootstrap2 ()
+  "Package based new version bootstrap."
+  (quelpa '(v-file :fetcher file :path "~/.emacs.d/v/v-file.el"))
   (v-complete)
   (v-golang))
 
