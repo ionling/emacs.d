@@ -2,6 +2,12 @@
 ;;; Commentary:
 ;;; Code:
 
+(defcustom v-file-save-place t
+  "Automatically save place in each file and go to the place at next visiting."
+  :type 'boolean
+  :group 'v-file)
+
+
 ;;;; Better defaults
 (set-default 'fill-column 80)
 (setq column-number-indicator-zero-based nil)
@@ -18,6 +24,13 @@
 ;;;; Buffer
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
+
+
+(use-package saveplace
+  :if v-file-save-place
+  :defer 2
+  :config
+  (save-place-mode))
 
 
 ;;;; Editor server
