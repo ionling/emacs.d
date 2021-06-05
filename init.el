@@ -64,10 +64,17 @@
   (v-complete-config))
 
 
-(defun v-golang ()
-  "Load `v-golang' package."
-  (quelpa '(v-golang :fetcher file :path "~/.emacs.d/v/v-golang.el"))
-  (v-golang-config))
+(defvar v-init-golang nil "Golang config already inited.")
+
+(defun v-init-golang ()
+  "Init golang config."
+  (unless v-init-golang
+    (v-ensure-package v-golang)
+    (v-golang-config)
+    (setq v-init-golang t)))
+
+(with-eval-after-load 'go-mode
+  (advice-add 'go-mode :before #'v-init-golang))
 
 
 (defun v-python ()
@@ -80,8 +87,7 @@
 (defun bootstrap2 ()
   "Package based new version bootstrap."
   (quelpa '(v-file :fetcher file :path "~/.emacs.d/v/v-file.el"))
-  (v-complete)
-  (v-golang))
+  (v-complete))
 
 
 (add-hook 'emacs-startup-hook #'bootstrap2)

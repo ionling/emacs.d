@@ -3,6 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration golang
+;; Version: 20210605
 ;; Package-Requires: (go-mode golint gotest go-playground)
 
 ;;; Commentary:
