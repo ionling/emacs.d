@@ -13,6 +13,7 @@
 
 
 (use-package highlight-numbers
+  :disabled
   :hook (prog-mode . highlight-numbers-mode))
 
 
@@ -31,6 +32,9 @@
   :defer 6
   :config
   (add-to-list 'hl-todo-keyword-faces '("REF" . "#20abb0"))
+  ;; Should put support for major mode in minor mode self
+  (with-eval-after-load 'protobuf-mode
+    (add-to-list 'hl-todo-include-modes 'protobuf-mode))
   (global-hl-todo-mode))
 
 
@@ -41,7 +45,10 @@
 (use-package symbol-overlay
   :defer 2
   :delight
-  :hook (prog-mode . symbol-overlay-mode)
+  :custom
+  (symbol-overlay-inhibit-map nil)
+  :hook
+  (prog-mode . symbol-overlay-mode)
   :general
   (symbol-overlay-map "c" #'symbol-overlay-count)
   :config
