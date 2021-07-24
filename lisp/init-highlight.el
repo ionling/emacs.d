@@ -1,3 +1,11 @@
+;;; init-highlight.el --- Editor highlight support       -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;; Code:
+(require 'use-package)
+
+
 (use-package beacon
   :defer 6
   :delight
@@ -53,3 +61,7 @@
   (symbol-overlay-map "c" #'symbol-overlay-count)
   :config
   (general-def 'vision-map "s" symbol-overlay-map))
+
+
+(provide 'init-highlight)
+;;; init-highlight.el ends here

@@ -28,6 +28,7 @@
 (require 'init-editor)
 (require 'init-ui)
 (require 'init-org)
+(require 'init-highlight)
 (require 'v-tests)
 
 
@@ -41,7 +42,6 @@
 
 (bootstrap :ui
            auto-theme
-           highlight
            :tools
            avy
            ivy)
