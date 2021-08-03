@@ -21,6 +21,7 @@
 ;;;; Modules
 
 (require 'init-core)                    ; Must be loaded first
+(require 'v-pkg)
 (require 'v-utils)
 (require 'init-tools)
 (require 'init-coding)
@@ -82,6 +83,8 @@
   (interactive)
   (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
   (v-python-config))
+
+(v-ensure-package v-text)
 
 
 (defun bootstrap2 ()
