@@ -25,8 +25,8 @@
         :config
         ;; https://stackoverflow.com/a/14033335/7134763
         (define-coding-system-alias 'UTF-8 'utf-8)
-        (setq-local v-format-func #'v-python-format
-                    v-sort-imports-func #'v-python-sort-imports))
+        (setq-local v-lang-format-func #'v-python-format
+                    v-lang-sort-imports-func #'v-python-sort-imports))
 
       (use-package pipenv
         :delight " Pe"

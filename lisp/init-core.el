@@ -45,7 +45,12 @@ NAME specified function name, DOCSTRING as well."
        (defun ,(intern func-name) ()
          ,(format "%s\nSee `%s'." docstring func-var)
          (interactive)
-         (funcall ,func-var-symbol)))))
+         (cond ((eq ,func-var-symbol nil)
+                (message "%s not defined" ,func-var))
+               ((commandp ,func-var-symbol)
+                (call-interactively ,func-var-symbol))
+               (t
+                (funcall ,func-var-symbol)))))))
 
 
 

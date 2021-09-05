@@ -3,20 +3,12 @@
 ;;; Code:
 (defvar v-lang-map (make-sparse-keymap))
 
-(v-defun find-definition "Find definitions of the symbol under point.")
-
-(v-defun find-references "Find references of the symbol under point.")
-
-(v-defun sort-imports "Sort the region imports, or if none is select, the buffer.")
-
-(v-defun format "Format the region, or if none is select, the buffer.")
-
-
 (general-def v-lang-map
-  "d" #'v-find-definition
-  "r" #'v-find-references
-  "f" #'v-format
-  "s" #'v-sort-imports)
+  "d" #'v-lang-find-definition
+  "r" #'v-lang-find-references
+  "a" #'v-lang-find-apropos
+  "s" #'v-lang-sort-imports
+  "f" #'v-lang-format)
 
 
 (delight 'prettier-js-mode " Pr" 'prettier-js)
