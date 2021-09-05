@@ -1,6 +1,9 @@
 ;;; init-core.el --- Config core
 ;;; Commentary:
 ;;; Code:
+(require 'v-pkg)
+
+
 (defvar v-modules nil)
 
 (defvar v-modules-loaded nil)
@@ -30,6 +33,27 @@
                (add-to-list 'v-modules-loaded module)
              (setq v-modules (list module)))
            (funcall (intern (format "v-load-%s" (symbol-name module))))))))
+
+
+;; https://www.emacswiki.org/emacs/KeywordArguments
+(defmacro v-init (module &rest args)
+  "Automatically initialize MODULE.
+Supported keyword ARGS:
+:package        Package which define MODULE-mode, default is MODULE-mode."
+  (let* ((symbol (intern (format "v-init-%s" module)))
+         (module-mode (intern (format "%s-mode" module)))
+         (package (or (plist-get args :package) module-mode)))
+    `(progn
+       (defvar ,symbol nil
+         ,(format "Whether %s module initialized." module))
+       (defun ,symbol ()
+         ,(format "Initialize %s module." module)
+         (unless ,symbol
+           (v-ensure-package ,(intern (format "v-%s" module)))
+           (funcall #',(intern (format "v-%s-config" module)))
+           (setq ,symbol t)))
+       (with-eval-after-load ',package
+         (advice-add ',module-mode :before #',symbol)))))
 
 
 (defmacro v-defun (name &optional docstring)

@@ -1,6 +1,9 @@
 ;;; init-langs.el --- Load languages
 ;;; Commentary:
 ;;; Code:
+(require 'init-core)
+
+
 (defvar v-lang-map (make-sparse-keymap))
 
 (general-def v-lang-map
@@ -9,6 +12,9 @@
   "a" #'v-lang-find-apropos
   "s" #'v-lang-sort-imports
   "f" #'v-lang-format)
+
+
+(v-init python :package python)
 
 
 (delight 'prettier-js-mode " Pr" 'prettier-js)
