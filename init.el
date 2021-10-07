@@ -102,6 +102,16 @@
   :quelpa (edit-list :fetcher file :path "~/.emacs.d/site-lisp/edit-list.el"))
 
 
+;;;; Package
+
+;; Parallel fetching/byte-compiling
+(use-package feather
+  :defer 5
+  :delight
+  :config
+  (feather-mode))
+
+
 ;;;; Input method
 
 (use-package rime
