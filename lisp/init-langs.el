@@ -89,5 +89,20 @@
   (use-package yaml-mode))
 
 
+(defun v-protobuf-config ()
+  "Load Protocol Buffers config."
+  (use-package protobuf-mode
+    :init
+    (with-eval-after-load 'evil
+      (add-to-list 'evil-normal-state-modes 'protobuf-mode))
+    (with-eval-after-load 'aggressive-indent
+      (add-to-list 'aggressive-indent-excluded-modes 'protobuf-mode)))
+
+  (protobuf-mode))
+
+
+(v-init-register-ext 'proto #'v-protobuf-config)
+
+
 (provide 'init-langs)
 ;;; init-langs.el ends here

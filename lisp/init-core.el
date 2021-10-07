@@ -56,6 +56,25 @@ Supported keyword ARGS:
          (advice-add ',module-mode :before #',symbol)))))
 
 
+(defvar v-init-by-file-ext nil "Plist of file extension to init function.")
+
+(defun v-init-register-ext (ext func)
+  "Register the file EXT with the FUNC."
+  (setq v-init-by-file-ext (plist-put v-init-by-file-ext ext func)))
+
+(defun v-init-by-file-ext ()
+  "Automatically run the init function according to file extension."
+  (let* ((ext (f-ext buffer-file-name))
+         (inited (intern (format "v-init-%s" ext))))
+    (when (and ext (not (boundp inited)))
+      (let ((func (plist-get v-init-by-file-ext (intern ext))))
+        (when func
+          (funcall func)
+          (set inited t))))))
+
+(add-hook 'find-file-hook #'v-init-by-file-ext)
+
+
 (defmacro v-defun (name &optional docstring)
   "Define a function which is configurable via variable.
 NAME specified function name, DOCSTRING as well."
