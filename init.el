@@ -84,6 +84,7 @@
   (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
   (v-python-config))
 
+(v-ensure-package v-graphic)
 (v-ensure-package v-text)
 
 
@@ -143,6 +144,12 @@
   :demand t
   :config
   (pyim-basedict-enable))
+
+
+;;;; Graphic
+
+(when (display-graphic-p)
+  (add-hook 'kill-emacs-hook #'v-frame-geometry-save))
 
 
 ;;; init.el ends here
