@@ -99,9 +99,20 @@ NAME specified function name, DOCSTRING as well."
 
 ;;;; Package
 (require 'package)
-(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
-                         ("org"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")))
+
+(let* ((mirror-163 "https://mirrors.163.com")
+       (mirror-tencent "https://mirrors.cloud.tencent.com")
+       (mirror-tsinghua "https://mirrors.tuna.tsinghua.edu.cn")
+       (mirror mirror-tsinghua))
+  (fset 'gen-mirror-url
+        (lambda (name)
+          `(,name . ,(format "%s/elpa/%s/" mirror name))))
+  (setq package-archives
+        `(,(gen-mirror-url "gnu")
+          ,(gen-mirror-url "melpa")
+          ,(gen-mirror-url "org"))))
+
+
 (package-initialize)
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
