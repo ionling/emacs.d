@@ -25,6 +25,7 @@
 (require 'v-utils)
 (require 'init-tools)
 (require 'init-coding)
+(require 'init-git)
 (require 'init-langs)
 (require 'init-editor)
 (require 'init-ui)
@@ -34,7 +35,7 @@
 
 
 (v-load doom-ui treemacs tabs
-        company dumb-jump flycheck git lsp
+        company dumb-jump flycheck lsp
         restclient
         elisp javascript org html xml yaml)
 
