@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: main file
+# key: mainp
+# --
+package main
+
+func main() {
+}
