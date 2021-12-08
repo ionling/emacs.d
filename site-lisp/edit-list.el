@@ -4,7 +4,7 @@
 
 ;; Author: Michael Olson <mwolson@gnu.org>
 ;; Date: Mon 31-Mar-2008
-;; Version: 0.3
+;; Version: 20211208
 ;; URL: http://mwolson.org/static/dist/elisp/edit-list.el
 
 ;; This file is not part of GNU Emacs.

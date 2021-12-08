@@ -71,7 +71,7 @@
 (defun v-init-golang ()
   "Init golang config."
   (unless v-init-golang
-    (v-ensure-package v-golang)
+    (v-ensure-package 'v-golang)
     (v-golang-config)
     (setq v-init-golang t)))
 
@@ -85,8 +85,8 @@
   (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
   (v-python-config))
 
-(v-ensure-package v-graphic)
-(v-ensure-package v-text)
+(v-ensure-package 'v-graphic)
+(v-ensure-package 'v-text)
 
 
 (defun bootstrap2 ()
@@ -100,8 +100,7 @@
 
 ;;;; Emacs
 
-(use-package edit-list :ensure nil
-  :quelpa (edit-list :fetcher file :path "~/.emacs.d/site-lisp/edit-list.el"))
+(v-ensure-package 'edit-list)
 
 
 ;;;; Package

@@ -18,11 +18,14 @@
 (v-require f)
 
 
-(defmacro v-ensure-package (pkg)
+(defun v-ensure-package (pkg)
   "Ensure PKG installed."
-  `(unless (assoc ',pkg package-alist)
-     (package-install-file
-      ,(f-join user-emacs-directory "v" (concat (symbol-name pkg) ".el")))))
+  (unless (assoc pkg package-alist)
+    (let* ((filename (concat (symbol-name pkg) ".el"))
+           (v-file (f-join user-emacs-directory "v" filename))
+           (site-file (f-join user-emacs-directory "site-lisp" filename)))
+      (cond ((f-exists-p v-file) (package-install-file v-file))
+            ((f-exists-p site-file) (package-install-file site-file))))))
 
 
 (provide 'v-pkg)
