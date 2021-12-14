@@ -3,7 +3,8 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration org-mode
-;; Package-Requires: (org)
+;; Version: 20211214
+;; Package-Requires: (org dash s counsel)
 
 ;;; Commentary:
 
@@ -13,6 +14,70 @@
 (require 'dash)
 (require 'org)
 (require 's)
+
+
+;;;###autoload
+(defun v-org-config ()
+  "Load org mode config."
+  (interactive)
+  (eval
+   '(progn
+      (use-package org
+        :custom
+        (org-archive-location "~/org/datetree.org::datetree/")
+        (org-image-actual-width nil)
+        (org-log-done 'time)
+        (org-modules '(ol-info org-id))
+        (org-startup-indented t)
+        (org-hide-block-startup t)
+        :general
+        (vision-map
+         :prefix "o"
+         :prefix-command 'v-org-map
+         "a" #'org-agenda
+         "i" #'org-clock-in
+         "o" #'org-clock-out
+         "g" #'v-org-goto
+         "s" #'v-org-search
+         "b" #'v-org-subtree-indirect-buffer)
+        :config
+        (setq org-plantuml-jar-path
+              (expand-file-name "plantuml.1.2019.12.jar" org-directory)
+              org-agenda-files `(,(expand-file-name "agenda" org-directory))
+              org-todo-keywords '((sequence "TODO" "DOING" "|" "DONE(d)" "ABORT"))
+              org-todo-keyword-faces '(("DOING" . "purple") ("ABORT" . "sea green"))
+              org-src-lang-modes
+              (append org-src-lang-modes
+                      '(("less" . less-css)
+                        ("py" . python)
+                        ("puml" . plantuml)
+                        ("toml" . conf-toml)
+                        ("zsh" . sh))))
+        (defalias 'org-babel-execute:py 'org-babel-execute:python)
+        (defalias 'org-babel-execute:puml 'org-babel-execute:plantuml)
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         '((emacs-lisp . t)
+           (plantuml . t)
+           (python . t)
+           (shell . t))))
+
+      (use-package org-id :ensure nil
+        :custom
+        (org-id-link-to-org-use-id t))
+
+      ;; `org-indent-mode' is enabled by setting the `org-startup-indented' to `t'.
+      (use-package org-indent :ensure nil :delight
+        :custom
+        (org-indent-indentation-per-level 1))
+
+      (use-package org-src :ensure nil
+        :custom
+        (org-src-window-setup 'other-window))
+
+      (use-package org-cliplink
+        :general
+        (v-org-map "l" #'org-cliplink)))))
 
 
 
