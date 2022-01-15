@@ -8,7 +8,7 @@
   "Git keymap.")
 
 
-(use-package gitignore-mode)
+(use-package git-modes)
 
 (use-package git-messenger
   :general
