@@ -10,6 +10,15 @@
 
 (use-package git-modes)
 
+(use-package blamer
+  :defer 4
+  :custom
+  (blamer-idle-time 1)
+  (blamer-min-offset 10)
+  :config
+  (global-blamer-mode 1))
+
+
 (use-package git-messenger
   :general
   (v-git-map "g" #'git-messenger:popup-message)
@@ -33,7 +42,7 @@
    "s" #'git-gutter:stage-hunk)
   :config
   (global-git-gutter-mode))
-  
+
 
 (use-package vc :ensure nil
   :custom
