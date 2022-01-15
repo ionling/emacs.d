@@ -85,6 +85,7 @@
   (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
   (v-python-config))
 
+(v-ensure-package 'v-demo)
 (v-ensure-package 'v-graphic)
 (v-ensure-package 'v-text)
 
