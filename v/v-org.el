@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration org-mode
-;; Version: 20211214
+;; Version: 20220217
 ;; Package-Requires: (org dash s counsel)
 
 ;;; Commentary:
@@ -196,6 +196,21 @@
     (make-indirect-buffer (current-buffer) headline t)
     (switch-to-buffer headline)
     (org-narrow-to-subtree)))
+
+
+;; e.g.:
+;; 如何看待 2022 年春节期间三、四线城市新房成交下跌超九成？ - 王克丹的回答 - 知乎
+;; https://www.zhihu.com/question/516693284/answer/2351591652
+;;;###autoload
+(defun v-org-yank-zhihu-sharing ()
+  "Yank Zhihu sharing."
+  (interactive)
+  (let* ((str  (current-kill 0))
+         (arr (s-lines str))
+         (title (-first-item arr))
+         (link (-last-item arr)))
+    (-> (format "[[%s][%s]]" link title)
+        (insert))))
 
 
 (provide 'v-org)
