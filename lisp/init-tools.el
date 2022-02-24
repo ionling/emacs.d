@@ -38,8 +38,17 @@
 
 
 (use-package youdao-dictionary
+  :init
+  (defun v-youdao-dict-search-at-point ()
+    "Automatically call best `youdao-dictionary-search-at-point-' function."
+    (interactive)
+    (cond ((and (require 'posframe nil t) (posframe-workable-p))
+           ;; Copied from `youdao-dictionary--posframe-tip'
+           (youdao-dictionary-search-at-point-posframe))
+          ((display-graphic-p) (youdao-dictionary-search-at-point-tooltip))
+          (t (youdao-dictionary-search-at-point+))))
   :general
-  (v-point-map "y" #'youdao-dictionary-search-at-point-posframe))
+  (v-point-map "y" #'v-youdao-dict-search-at-point))
 
 
 (use-package paradox
