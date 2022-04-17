@@ -88,6 +88,7 @@
 (v-ensure-package 'v-demo)
 (v-ensure-package 'v-graphic)
 (v-ensure-package 'v-text)
+(v-ensure-package 'v-unknown)
 
 
 (defun bootstrap2 ()
