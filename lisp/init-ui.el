@@ -4,15 +4,35 @@
 
 (require 'dash)
 
+
+(defgroup v-theme nil
+  "Vision theme."
+  :group 'v-ui
+  :prefix "v-theme-")
+
+(defcustom v-theme-always-enabled-list '(better-prog)
+  "Always enabled themes when switching."
+  :type '(repeat symbol)
+  :group 'v-theme)
+
 ;;;; Theme
 ;; REF https://www.reddit.com/r/emacs/comments/ezetx0/doomthemes_screenshots_updated_good_time_to_go/
-(defun ap/switch-theme (theme)
+(defun v-theme-switch (theme)
   "Disable active themes and load THEME."
   (interactive (->> (custom-available-themes)
                     (completing-read "Theme: ")
                     intern list))
   (mapc #'disable-theme custom-enabled-themes)
-  (load-theme theme t))
+  (load-theme theme t)
+  (dolist (theme v-theme-always-enabled-list)
+    (load-theme theme t))
+  (message "[theme] Switched to %s" theme))
+
+(defun v-theme-random ()
+  "Switch to a random theme."
+  (interactive)
+  (let ((theme (seq-random-elt (custom-available-themes))))
+    (v-theme-switch theme)))
 
 
 (use-package all-the-icons)
