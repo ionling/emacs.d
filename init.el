@@ -154,4 +154,29 @@
   (add-hook 'kill-emacs-hook #'v-frame-geometry-save))
 
 
+;;;; Network
+
+(defcustom v-proxy-config ""
+  "The proxy config: a string of host:port."
+  :type 'string
+  :group 'v-proxy)
+
+(defun v-proxy-config ()
+  "Show current proxy config."
+  (interactive)
+  (message "Proxy config: %s" v-proxy-config))
+
+(define-minor-mode v-proxy-mode
+  "A mode for HTTP/HTTPS proxy.
+Refer https://emacs-china.org/t/topic/2808/24."
+  :global t
+  :group 'v-proxy
+  :init-value nil
+  :lighter " Proxy"
+  (setq url-proxy-services
+        (if v-proxy-mode
+            `(("http" . ,v-proxy-config)
+              ("https" . ,v-proxy-config)))))
+
+
 ;;; init.el ends here
