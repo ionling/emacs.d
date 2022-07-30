@@ -179,4 +179,28 @@ Refer https://emacs-china.org/t/topic/2808/24."
               ("https" . ,v-proxy-config)))))
 
 
+;;;; Keyboard
+;;;;; Evil
+(use-package evil
+  :hook (emacs-startup . evil-mode)
+  :custom
+  (evil-undo-system 'undo-tree)
+  :config
+  (dolist (key '("C-a" "C-e" "C-n" "C-p" "C-d" "C-y"))
+    (define-key evil-insert-state-map (kbd key) nil))
+  (dolist (key '("C-e" "C-i"))
+    (define-key evil-motion-state-map (kbd key) nil))
+
+  (delete 'compilation-mode evil-motion-state-modes)
+  (setq evil-default-state 'emacs)
+  (setq evil-normal-state-modes
+        (-union evil-normal-state-modes
+                '(prog-mode text-mode org-mode conf-mode yaml-mode))))
+
+(use-package evil-surround
+  :defer 4
+  :config
+  (global-evil-surround-mode))
+
+
 ;;; init.el ends here
