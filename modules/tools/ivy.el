@@ -47,3 +47,15 @@
                  "p" #'counsel-git-grep
                  "f" #'counsel-recentf
                  "s" #'counsel-semantic-or-imenu))
+
+(use-package prescient
+  :config
+  (prescient-persist-mode))
+
+;; Sort the ivy candidates by frequency
+(use-package ivy-prescient
+  :defer 1
+  :custom
+  (ivy-prescient-retain-classic-highlighting t)
+  :config
+  (ivy-prescient-mode))
