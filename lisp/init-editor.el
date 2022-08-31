@@ -1,6 +1,11 @@
 ;;; init-editor.el --- Config of common editor features
 ;;; Commentary:
 ;;; Code:
+(require 's)
+(require 'outline)
+
+(require 'init-core)
+
 
 (defcustom v-file-save-place t
   "Automatically save place in each file and go to the place at next visiting."
@@ -12,6 +17,37 @@
 (set-default 'fill-column 80)
 (setq column-number-indicator-zero-based nil)
 (setq make-backup-files nil)
+
+
+(defun buffer-name-list ()
+  "Get all buffer names."
+  (mapcar #'buffer-name (buffer-list)))
+
+(defun window-count ()
+  "Get window count of the selected frame."
+  (length (window-list)))
+
+
+(defun v-outline-hide-body-other-window ()
+  "Call `outline-hide-body' in other indirect buffer window."
+  (interactive)
+  (let* ((cur-buf (current-buffer))
+         (buf-name (buffer-name cur-buf))
+         ;; Get max indirect buffer ID of current base buffer
+         (max-id (->> (buffer-name-list)
+                      (-filter (lambda (x) (s-starts-with? buf-name x) ))
+                      (-map (lambda (x) (s-replace buf-name "" x)))
+                      (-map #'string-to-number)
+                      (-map #'-)
+                      (-sort #'>)
+                      (-first-item)))
+         (new-name (format "%s-%d" buf-name (1+ max-id))))
+    (make-indirect-buffer cur-buf new-name t)
+    (if (eq (window-count) 1)
+        (split-window-right))
+    (other-window 1)
+    (switch-to-buffer new-name)
+    (outline-hide-body)))
 
 
 ;;;; Autosave
