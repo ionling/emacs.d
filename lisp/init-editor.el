@@ -90,6 +90,14 @@
   :config (global-aggressive-indent-mode))
 
 
+;;;; Outline
+(use-package outline
+  :custom
+  (outline-minor-mode-cycle t)
+  :hook
+  (prog-mode . outline-minor-mode))
+
+
 ;;;; Paren edit
 (use-package smartparens
   :delight

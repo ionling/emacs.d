@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration golang
-;; Version: 20210605
+;; Version: 20220901
 ;; Package-Requires: (go-mode golint gotest go-playground)
 
 ;;; Commentary:
@@ -26,7 +26,8 @@
         :custom
         (gofmt-command "goimports")
         :hook
-        (before-save . gofmt-before-save))
+        (before-save . gofmt-before-save)
+        (outline-minor-mode . v-golang-outline-set-local))
 
       (use-package golint)
 
@@ -80,6 +81,24 @@
   (shell-command
    (format "golines --no-reformat-tags -m %s -w %s"
            fill-column buffer-file-name)))
+
+
+;;;; Outline
+(defvar v-golang-outline-comment-regex
+  (rx "//" (group (+ "/")) " "))
+
+(defun v-golang-outline-level ()
+  "Go mode variable `outline-level' function."
+  (let ((len (- (match-end 0) (match-beginning 0))))
+    (cond ((looking-at v-golang-outline-comment-regex)
+           (- (match-end 1) (match-beginning 1)))
+          ;; Above should match everything but just in case.
+          (t len))))
+
+(defun v-golang-outline-set-local ()
+  "Set `go-mode' `outline-regexp'."
+  (setq-local outline-level #'v-golang-outline-level)
+  (setq-local outline-regexp v-golang-outline-comment-regex))
 
 
 (provide 'v-golang)
