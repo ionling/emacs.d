@@ -17,7 +17,7 @@
 
 (use-package google-this
   :general
-  (v-point-map "g" #'google-this))
+  (v-point-map "h" #'google-this))
 
 
 (use-package helpful

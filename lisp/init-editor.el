@@ -120,6 +120,13 @@
   :config (smooth-scrolling-mode))
 
 
+;;;; Search
+(use-package deadgrep
+  :bind
+  (:map v-point-map
+        ("g" . deadgrep)))              ; Grep
+
+
 ;;;; Whitespace
 (use-package ws-butler
   :delight
