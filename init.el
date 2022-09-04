@@ -39,26 +39,6 @@
         restclient
         elisp javascript org html xml yaml)
 
-(require 'v-modules)
-
-
-(bootstrap :ui
-           auto-theme
-           :tools
-           avy
-           ivy)
-
-
-(when is-wsl
-  (bootstrap :os wsl))
-
-
-(unless window-system
-  (bootstrap :os tty))
-
-
-(load-file v-autoload-file)
-
 
 (defun v-complete ()
   "Load `v-complete' package."
@@ -89,12 +69,20 @@
 (v-ensure-package 'v-graphic)
 (v-ensure-package 'v-text)
 (v-ensure-package 'v-unknown)
+(v-ensure-package 'v-avy)
+(v-ensure-package 'v-ivy)
+(v-ensure-package 'v-wsl)
+(v-ensure-package 'v-auto-theme)
 
 
 (defun bootstrap2 ()
   "Package based new version bootstrap."
   (quelpa '(v-file :fetcher file :path "~/.emacs.d/v/v-file.el"))
-  (v-complete))
+  (v-complete)
+  (v-avy-config)
+  (v-ivy-config)
+  (when is-wsl
+    (v-wsl-config)))
 
 
 (add-hook 'emacs-startup-hook #'bootstrap2)
