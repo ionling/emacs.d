@@ -21,7 +21,7 @@
 ;;;; Modules
 
 (require 'init-core)                    ; Must be loaded first
-(require 'v-pkg)
+(require 'v-pkg (v-join-user-emacsd "v" "v-pkg.el"))
 (require 'v-utils)
 (require 'init-tools)
 (require 'init-coding)
@@ -35,15 +35,9 @@
 
 
 (v-load doom-ui treemacs tabs
-        company dumb-jump flycheck lsp
+        dumb-jump flycheck lsp
         restclient
         elisp javascript org html xml yaml)
-
-
-(defun v-complete ()
-  "Load `v-complete' package."
-  (quelpa '(v-complete :fetcher file :path "~/.emacs.d/v/v-complete.el"))
-  (v-complete-config))
 
 
 (defvar v-init-golang nil "Golang config already inited.")
@@ -65,27 +59,27 @@
   (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
   (v-python-config))
 
-(v-ensure-package 'v-demo)
-(v-ensure-package 'v-graphic)
-(v-ensure-package 'v-text)
-(v-ensure-package 'v-unknown)
-(v-ensure-package 'v-avy)
-(v-ensure-package 'v-ivy)
-(v-ensure-package 'v-wsl)
-(v-ensure-package 'v-auto-theme)
-
-
-(defun bootstrap2 ()
-  "Package based new version bootstrap."
-  (quelpa '(v-file :fetcher file :path "~/.emacs.d/v/v-file.el"))
-  (v-complete)
-  (v-avy-config)
-  (v-ivy-config)
-  (when is-wsl
-    (v-wsl-config)))
-
-
-(add-hook 'emacs-startup-hook #'bootstrap2)
+(use-package v-file :v-ensure)
+(use-package v-demo :v-ensure)
+(use-package v-graphic :v-ensure)
+(use-package v-text :v-ensure)
+(use-package v-unknown :v-ensure)
+(use-package v-avy :v-ensure
+  :defer .3
+  :config (v-avy-config))
+(use-package v-ivy :v-ensure
+  :defer .3
+  :config (v-ivy-config))
+(use-package v-complete :v-ensure
+  :defer .4
+  :config (v-complete-config))
+(use-package v-auto-theme :v-ensure
+  :defer .5
+  :config (v-auto-theme-config))
+(use-package v-wsl :v-ensure
+  :if is-wsl
+  :defer .5
+  :config (v-wsl-config))
 
 
 ;;;; Emacs

@@ -9,6 +9,27 @@
 (defvar v-modules-loaded nil)
 
 
+;; Don't use `f' lib, as it will slow down Emacs startup (it requires many packages)
+(defun v-join-user-emacsd (&rest paths)
+  "Join PATHS with `user-emacs-directory'."
+  (let ((res user-emacs-directory))
+    (dolist (path paths res)
+      (setq res (expand-file-name path res)))))
+
+
+;; We can also use `cl-loop'.
+;; See https://github.com/noctuid/general.el/blob/9651024e7f40a8ac5c3f31f8675d3ebe2b667344/general.el#L2578.
+(defun push-after (elem pos list-sym)
+  "Push ELEM after POS in LIST-SYM.
+If ELEM not found, do nothing."
+  (let (res)
+    (dolist (i (symbol-value list-sym) res)
+      (push i res)
+      (if (eq i pos)
+          (push elem res)))
+    (set list-sym (reverse res))))
+
+
 (defmacro v-defmodule (name &rest body)
   "Define a NAME module.  BODY are forms to eval."
   (declare (indent defun))

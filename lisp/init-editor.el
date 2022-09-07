@@ -127,6 +127,17 @@
         ("g" . deadgrep)))              ; Grep
 
 
+;;;; Thing at point
+(use-package thing-edit
+  :v-ensure
+  :general
+  (v-point-map
+   "n" #'thing-copy-number
+   "s" #'thing-copy-symbol
+   "u" #'thing-copy-url
+   "w" #'thing-copy-word))
+
+
 ;;;; Whitespace
 (use-package ws-butler
   :delight

@@ -6,6 +6,8 @@
 
 (require 'use-package)
 
+(require 'init-core)
+
 
 (defmacro v-require (feature)
   "Like `require', but will download package when FEATURE not found."
@@ -15,17 +17,33 @@
      (require ',feature)))
 
 
-(v-require f)
-
-
+;;;; v-ensure-package
 (defun v-ensure-package (pkg)
   "Ensure PKG installed."
   (unless (assoc pkg package-alist)
-    (let* ((filename (concat (symbol-name pkg) ".el"))
-           (v-file (f-join user-emacs-directory "v" filename))
-           (site-file (f-join user-emacs-directory "site-lisp" filename)))
-      (cond ((f-exists-p v-file) (package-install-file v-file))
-            ((f-exists-p site-file) (package-install-file site-file))))))
+    (let* ((sym-name (symbol-name pkg))
+           (filename (concat sym-name ".el"))
+           (paths `(("v" ,filename)
+                    ("site-lisp" ,sym-name)
+                    ("site-lisp" ,filename))))
+      (cl-loop for path in paths
+               for file = (apply #'v-join-user-emacsd path)
+               if (file-exists-p file)
+               return (package-install-file file)))))
+
+
+;;;;; use-package keyword
+(defun use-package-normalize/:v-ensure (_name _keyword args)
+  "Normalize `:v-ensure' ARGS."
+  args)
+
+(defun use-package-handler/:v-ensure (name _keyword _ rest state)
+  "Handle `:v-ensure' for NAME package.
+see `use-package-process-keywords' for REST and STATE."
+  (v-ensure-package name)
+  (use-package-process-keywords name rest state))
+
+(push-after 'use-package-keywords :disabled :v-ensure)
 
 
 (provide 'v-pkg)
