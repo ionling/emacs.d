@@ -104,5 +104,27 @@
 (v-init-register-ext 'proto #'v-protobuf-config)
 
 
+;;;; sh
+(defvar v-sh-outline-regex
+  (rx "#" (group (+ "#")) " "))
+
+(defun v-sh-outline-level ()
+  "Shell-script mode variable `outline-level' function."
+  (let ((len (- (match-end 0) (match-beginning 0))))
+    (cond ((looking-at v-sh-outline-regex)
+           (- (match-end 1) (match-beginning 1)))
+          (t len))))
+
+(defun v-sh-outline-set-local ()
+  "Set `sh-mode' buffer-local variables."
+  (when outline-minor-mode
+    (setq-local outline-level #'v-sh-outline-level)
+    (setq-local outline-regexp v-sh-outline-regex)))
+
+(use-package sh-script
+  :hook
+  (sh-mode . v-sh-outline-set-local))
+
+
 (provide 'init-langs)
 ;;; init-langs.el ends here
