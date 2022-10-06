@@ -145,5 +145,17 @@
   :config (ws-butler-global-mode))
 
 
+(defun v-copy-and-comment-region (beg end &optional arg)
+  "Duplicate the region BEG to END and comment out the copied text.
+See `comment-region' for prefix ARG.
+This is useful when you want to refactor some code.
+Refer https://stackoverflow.com/a/23588908/7134763."
+  (interactive "r\nP")
+  (copy-region-as-kill beg end)
+  (goto-char end)
+  (yank)
+  (comment-region beg end arg))
+
+
 (provide 'init-editor)
 ;;; init-editor.el ends here
