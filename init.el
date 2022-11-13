@@ -22,14 +22,12 @@
 
 (require 'init-core)                    ; Must be loaded first
 (require 'v-pkg (v-join-user-emacsd "v" "v-pkg.el"))
-(require 'v-utils)
 (require 'init-tools)
 (require 'init-coding)
 (require 'init-git)
 (require 'init-langs)
 (require 'init-editor)
 (require 'init-ui)
-(require 'init-org)
 (require 'init-highlight)
 (require 'v-tests)
 
@@ -80,6 +78,9 @@
   :if is-wsl
   :defer .5
   :config (v-wsl-config))
+(use-package v-org :v-ensure
+  :defer 1
+  :config (v-org-config))
 
 
 ;;;; Emacs

@@ -80,6 +80,49 @@
         (v-org-map "l" #'org-cliplink)))))
 
 
+;;;###autoload
+(defun org-x-goto-indirect-buffer ()
+  "Create indirect buffer for X entry."
+  (interactive)
+  (find-file "~/org/x.org")
+  (let ((rand (number-to-string (random 999))))
+    (make-indirect-buffer (current-buffer) rand t)
+    (switch-to-buffer rand)
+    (unwind-protect
+        (progn (counsel-outline)
+               (org-narrow-to-subtree)
+               (let ((headline (org-get-heading t t t t)))
+                 (rename-buffer headline)))
+      (kill-buffer rand))))
+
+
+;;;###autoload
+(defun org-babel-tangle-tmp ()
+  "Tangle the block at point to tmp file."
+  (interactive)
+  (org-babel-tangle 4))
+
+
+;;;###autoload
+(defun org-babel-tangle-tmp2 ()
+  (interactive)
+  (let* ((info (org-babel-get-src-block-info))
+         (lang (car info))
+         (code (nth 1 info)))
+    (message code)
+    (-> (make-temp-file "" nil (concat "." lang) code)
+        (find-file))))
+
+
+;;;###autoload
+(defun v-org-babel-copy-code ()
+  "Save current babel code to kill ring."
+  (interactive)
+  (if-let ((info (org-babel-get-src-block-info))
+           (code (nth 1 info)))
+      (kill-new code)
+    (user-error "No src block here")))
+
 
 ;;;; Outline commands:
 
