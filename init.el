@@ -22,6 +22,7 @@
 
 (require 'init-core)                    ; Must be loaded first
 (require 'v-pkg (v-join-user-emacsd "v" "v-pkg.el"))
+(require 'init-file)
 (require 'init-tools)
 (require 'init-coding)
 (require 'init-git)
