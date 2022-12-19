@@ -3,17 +3,20 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration golang
-;; Version: 20220901
-;; Package-Requires: (go-mode golint gotest go-playground)
+;; Version: 20221220
+;; Package-Requires: (f go-mode golint gotest go-gen-test go-playground popwin
+;;   projectile)
 
 ;;; Commentary:
 
 ;;; Code:
 
+(require 'f)
+(require 'go-mode)
+(require 'go-gen-test)
 (require 'go-playground)
 (require 'popwin)
 (require 'projectile)
-(require 'use-package)
 
 
 ;;;###autoload
@@ -33,10 +36,13 @@
 
       (use-package gotest)
 
+      ;; Generate test with gotests
+      (use-package go-gen-test)
+
       (use-package go-playground))))
 
 
-(defun v-go-playground-browse (paste)
+(defun v-golang-playground-browse (paste)
   "Browse selected PASTE."
   (interactive
    (->> go-playground-basedir
@@ -48,7 +54,7 @@
   (find-file (f-join go-playground-basedir paste "snippet.go")))
 
 
-(defun v-go-playground-count ()
+(defun v-golang-playground-count ()
   "Show go playground pastes count."
   (interactive)
   (->> go-playground-basedir
@@ -57,7 +63,7 @@
     (message "Total %s pastes")))
 
 
-(defun v-go-swag-init ()
+(defun v-golang-swag-init ()
   "Call `swag init` in project root."
   (interactive)
   ;; `shell-command' uses the the buffer's `default-directory' as working directory
@@ -65,7 +71,7 @@
     (shell-command "swag init" "*swag init*")))
 
 
-(defun v-golangci-lint ()
+(defun v-golang-golangci-lint ()
   "Call `golangci-lint run` in project root."
   (interactive)
   (let ((default-directory (projectile-project-root))
@@ -74,7 +80,7 @@
     (popwin:popup-buffer buffer-name)))
 
 
-(defun v-go-shorten-lines ()
+(defun v-golang-shorten-lines ()
   "Shorten long lines in current file."
   (interactive)
   (save-buffer)
@@ -99,6 +105,19 @@
   "Set `go-mode' `outline-regexp'."
   (setq-local outline-level #'v-golang-outline-level)
   (setq-local outline-regexp v-golang-outline-comment-regex))
+
+(defun v-golang-test-gen-at-point ()
+  "Generate test for function at point.
+Refer `go-gen-test-dwim'."
+  (interactive)
+  (save-excursion
+    (go-goto-function-name)
+    (shell-command
+     (format "%s -only %s %s"
+             (go-gen-test-base-command)
+             (shell-quote-argument (thing-at-point 'symbol))
+             (shell-quote-argument buffer-file-name)))
+    (funcall go-gen-test-open-function)))
 
 
 (provide 'v-golang)

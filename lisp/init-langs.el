@@ -11,7 +11,9 @@
   "r" #'v-lang-find-references
   "a" #'v-lang-find-apropos
   "s" #'v-lang-sort-imports
-  "f" #'v-lang-format)
+  "f" #'v-lang-format
+  "n" #'v-lang-rename
+  "e" #'v-lang-execute-code-action)
 
 
 (v-init python :package python)

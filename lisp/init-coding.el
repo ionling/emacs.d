@@ -14,6 +14,11 @@
          "Sort the region imports, or if none is select, the buffer.")
 (v-defun lang-format
          "Format the region, or if none is select, the buffer.")
+(v-defun lang-rename
+         "Rename the symbol (and all references to it) under point.")
+(v-defun lang-execute-code-action
+         "Execute code action.")
+
 
 (setq v-lang-find-references-func #'xref-find-references)
 (setq v-lang-find-definition-func #'xref-find-definitions)
@@ -67,7 +72,8 @@
 
   (use-package lsp-ui
     :custom
-    (lsp-ui-doc-position 'top))
+    (lsp-ui-doc-position 'top)
+    (lsp-ui-doc-show-with-cursor t))
 
   (use-package lsp-mode
     :delight

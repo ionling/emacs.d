@@ -1,6 +1,6 @@
 ;;; v-unknown.el --- Some unknown functions or commands
 
-;; Version: 20220417
+;; Version: 20221220
 
 ;;; Commentary:
 
@@ -11,6 +11,8 @@
 (require 'v-pkg)
 (v-require projectile)
 
+
+;;;; Visual Studio Code
 
 ;;;###autoload
 (defun v-code-open-cur-file ()
@@ -26,6 +28,7 @@
        (concat "code ")
        shell-command))
 
+;;;; Misc
 
 ;;;###autoload
 (defun v-edit-user-init-file ()
@@ -33,6 +36,12 @@
   (interactive)
   (find-file-other-window user-init-file))
 
+;;;###autoload
+(defun v-insert-current-date ()
+  "Insert today's date.
+Refer https://www.emacswiki.org/emacs/InsertingTodaysDate."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))
 
 ;;;###autoload
 (defun v-wechat-clean-url (url)

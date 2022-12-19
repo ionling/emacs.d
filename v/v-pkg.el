@@ -1,4 +1,5 @@
 ;;; v-pkg.el --- Vision package management -*- lexical-binding: t; -*-
+;; Version: 20221220
 ;;; Commentary:
 ;;; Code:
 
@@ -15,6 +16,14 @@
      (unless (assoc ',feature package-alist)
        (use-package ,feature))
      (require ',feature)))
+
+;;;###autoload
+(defun v-completing-require (feature)
+  "Load FEATURE with completion."
+  (interactive
+   (->> (completing-read "Feature: " features)
+        intern list))
+  (require feature))
 
 
 ;;;; v-ensure-package
@@ -43,7 +52,7 @@ see `use-package-process-keywords' for REST and STATE."
   (v-ensure-package name)
   (use-package-process-keywords name rest state))
 
-(push-after 'use-package-keywords :disabled :v-ensure)
+(push-after :v-ensure :disabled 'use-package-keywords)
 
 
 (provide 'v-pkg)
