@@ -47,8 +47,7 @@
 ;; https://i.loli.net/2021/02/18/6JTOmoUdvt5yf1w.gif
 (use-package volatile-highlights
   :delight
-  :defer 4
-  :config (volatile-highlights-mode))
+  :hook (v-ui . volatile-highlights-mode))
 
 
 
@@ -63,7 +62,7 @@
     (doom-modeline-buffer-file-name-style 'buffer-name)
     (doom-modeline-icon t)
     (doom-modeline-minor-modes t)
-    :hook (after-init . doom-modeline-mode)))
+    :hook (v-ui . doom-modeline-mode)))
 
 
 
@@ -74,6 +73,9 @@
     (centaur-tabs-set-bar 'left)
     :init (centaur-tabs-mode)))
 
+;; Random theme at each start
+(v-with-idle-timer .1
+  (v-theme-random))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here

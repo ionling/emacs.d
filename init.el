@@ -28,6 +28,13 @@
 ;;;; Modules
 
 (require 'init-core)                    ; Must be loaded first
+(defvar v-ui-hook nil "Hook run when ui init.")
+(defvar v-editor-hook nil "Hook run when editor init.")
+(v-with-idle-timer 1
+  (run-hooks 'v-editor-hook))
+(v-with-idle-timer 2
+  (run-hooks 'v-ui-hook))
+
 (require 'v-pkg (v-join-user-emacsd "v" "v-pkg.el"))
 (require 'init-file)
 (require 'init-tools)

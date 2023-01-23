@@ -53,8 +53,7 @@
 ;;;; Autosave
 (use-package focus-autosave-mode
   :delight
-  :defer 3
-  :config (focus-autosave-mode))
+  :hook (v-editor . focus-autosave-mode))
 
 
 ;;;; Buffer
@@ -64,19 +63,21 @@
 
 (use-package saveplace
   :if v-file-save-place
-  :defer 2
-  :config
-  (save-place-mode))
+  :hook (v-editor . save-place-mode))
 
+
+(defun v-server-start ()
+  "Call `server-start' if no server is running."
+  (require 'server)
+  (if (not (or (daemonp) (server-running-p)))
+      (server-start)))
 
 ;;;; Editor server
 (use-package server
-  :defer 3
+  :hook (v-editor . v-server-start)
   :config
   ;; fix: Getting attributes: Permission denied, /mnt/wslg/runtime-dir/emacs
-  (setq server-socket-dir (v-join-user-emacsd "server"))
-  (if (not (or (daemonp) (server-running-p)))
-      (server-start)))
+  (setq server-socket-dir (v-join-user-emacsd "server")))
 
 
 ;;;; Fill paragraph
@@ -88,8 +89,7 @@
 (set-default 'indent-tabs-mode nil)
 
 (use-package aggressive-indent
-  :defer 3
-  :config (global-aggressive-indent-mode))
+  :hook (v-editor . global-aggressive-indent-mode))
 
 
 ;;;; Outline
@@ -103,12 +103,11 @@
 ;;;; Paren edit
 (use-package smartparens
   :delight
-  :defer 3
+  :hook ((v-editor . smartparens-global-mode)
+         ;; https://i.loli.net/2020/12/28/SIGCO29ZDX6wBYl.gif
+         (v-editor . show-smartparens-global-mode))
   :config
-  (require 'smartparens-config)         ; Load default config
-  (smartparens-global-mode)
-  ;; https://i.loli.net/2020/12/28/SIGCO29ZDX6wBYl.gif
-  (show-smartparens-global-mode))
+  (require 'smartparens-config))        ; Load default config
 
 
 ;;;; Region
@@ -118,8 +117,7 @@
 
 ;;;; Scrolling
 (use-package smooth-scrolling
-  :defer 3
-  :config (smooth-scrolling-mode))
+  :hook (v-editor . smooth-scrolling-mode))
 
 
 ;;;; Search
@@ -143,8 +141,7 @@
 ;;;; Whitespace
 (use-package ws-butler
   :delight
-  :defer 3
-  :config (ws-butler-global-mode))
+  :hook (v-editor . ws-butler-global-mode))
 
 
 (defun v-copy-and-comment-region (beg end &optional arg)
