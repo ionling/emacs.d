@@ -140,15 +140,6 @@ NAME specified function name, DOCSTRING as well."
 (when (file-exists-p custom-file)
   (load-file custom-file))
 
-;; benchmark-init
-(if (not (package-installed-p 'benchmark-init))
-    (progn
-      (package-refresh-contents)
-      (package-install 'benchmark-init)))
-
-(require 'benchmark-init)
-(benchmark-init/activate)
-(add-hook 'after-init-hook #'benchmark-init/deactivate)
 
 ;; use-package
 (if (not (package-installed-p 'use-package))

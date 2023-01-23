@@ -73,6 +73,8 @@
 (use-package server
   :defer 3
   :config
+  ;; fix: Getting attributes: Permission denied, /mnt/wslg/runtime-dir/emacs
+  (setq server-socket-dir (v-join-user-emacsd "server"))
   (if (not (or (daemonp) (server-running-p)))
       (server-start)))
 

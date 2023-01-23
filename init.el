@@ -15,6 +15,13 @@
      (message "gc-cons-threshold and file-name-handler-alist restored"))))
 
 
+;; The benchmark should be placed at the top of init.el so that it covers all init code.
+(when nil
+  (require 'benchmark-init)
+  (benchmark-init/activate)
+  (add-hook 'after-init-hook #'benchmark-init/deactivate))
+
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "core" user-emacs-directory))
 
