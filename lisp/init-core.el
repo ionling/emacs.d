@@ -30,6 +30,16 @@ If ELEM not found, do nothing."
     (set list-sym (reverse res))))
 
 
+(defmacro v-with-idle-timer (secs &rest body)
+  "Perform BODY the next time Emacs is idle for SECS seconds.
+A wrapper of `run-with-idle-timer'."
+  (declare (indent 1))
+  `(run-with-idle-timer
+    ,secs nil
+    (lambda ()
+      ,@body)))
+
+
 (defmacro v-defmodule (name &rest body)
   "Define a NAME module.  BODY are forms to eval."
   (declare (indent defun))
@@ -117,6 +127,45 @@ NAME specified function name, DOCSTRING as well."
                 (funcall ,func-var-symbol)))))))
 
 
+(defun v-dep-hook-symbal (name)
+  "Return the symbal used by NAME `v-dep'."
+  (intern (format "v-dep-%s-hook" name)))
+
+(defmacro v-dep (name &rest args)
+  "Declare a NAME block defined in ARGS.
+Keywords:
+:after         After another `v-dep' block
+:idle          Like `run-with-idle-timer'
+:do            Body to execute"
+  (let ((after (plist-get args :after))
+        (idle (plist-get args :idle))
+        (do-func (intern (format "v-dep-do-%s" name)))
+        finded do)
+    (dolist (e args do)
+      (if (and (keywordp e) finded)
+          (setq finded nil))
+      (if finded
+          (push e do))
+      (if (eq e :do)
+          (setq finded t)))
+
+    (when (eq do nil)
+      (lwarn 'v-dep :warning "no do keyword of %s" name))
+
+    (push `(run-hooks ',(v-dep-hook-symbal name)) do)
+    (setq do (reverse do))
+
+    `(progn
+       (defun ,do-func ()
+         ,@do)
+       ,(if after
+            `(add-hook ,(v-dep-hook-symbal after) ,do-func)
+          (if idle
+              `(v-with-idle-timer ,idle
+                 (,do-func))
+            `(,do-func))))))
+
+
 
 ;;;; Package
 (require 'package)
@@ -136,9 +185,10 @@ NAME specified function name, DOCSTRING as well."
 
 (package-initialize)
 
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load-file custom-file))
+(setq custom-file (v-join-user-emacsd "custom.el"))
+(v-with-idle-timer .08
+  (when (file-exists-p custom-file)
+    (load-file custom-file)))
 
 
 ;; use-package

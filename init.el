@@ -171,6 +171,10 @@ Refer https://emacs-china.org/t/topic/2808/24."
 
 
 ;;;; Keyboard
+;; Prompt to eval a locally relevant function, with hints and keybindings.
+(use-package key-assist)
+
+
 ;;;;; Evil
 (use-package evil
   :hook (emacs-startup . evil-mode)
