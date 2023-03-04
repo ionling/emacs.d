@@ -1,12 +1,19 @@
 ;;; v-text.el --- Text manipulation -*- lexical-binding: t -*-
 
-;; Version: 20210803
+;; Version: 20230304
 ;; Package-Requires: (evil)
 
 ;;; Commentary:
 
 ;;; Code:
 (require 'evil-states)
+
+
+;;;###autoload
+(defun v-text-insert-star ()
+  "Insert a star emoji."
+  (interactive)
+  (insert-char ?🌟))
 
 
 ;;;###autoload
