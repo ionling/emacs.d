@@ -66,13 +66,18 @@
   :hook (v-editor . save-place-mode))
 
 
+;;;; Display fill-column
+(use-package display-fill-column-indicator
+  :hook (v-editor . global-display-fill-column-indicator-mode))
+
+
+;;;; Editor server
 (defun v-server-start ()
   "Call `server-start' if no server is running."
   (require 'server)
   (if (not (or (daemonp) (server-running-p)))
       (server-start)))
 
-;;;; Editor server
 (use-package server
   :hook (v-editor . v-server-start)
   :config
