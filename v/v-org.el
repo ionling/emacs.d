@@ -3,8 +3,8 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration org-mode
-;; Version: 20220217
-;; Package-Requires: (org dash s counsel)
+;; Version: 20230405
+;; Package-Requires: (org dash f s counsel)
 
 ;;; Commentary:
 
@@ -12,6 +12,7 @@
 
 (require 'counsel)
 (require 'dash)
+(require 'f)
 (require 'org)
 (require 's)
 
@@ -130,13 +131,8 @@
 (defun v-org-goto ()
   "Goto org heading."
   (interactive)
-  (let* ((files (directory-files "~/org" t "\\.org"))
-         (cands (->>
-                 files
-                 (-map 'v-org-outline)
-                 (-flatten-n 1))))
-    (ivy-read "Go " cands
-              :action #'v-org-goto-action)))
+  (ivy-read "Go " (cl-concatenate 'list (v-org-outline))
+            :action #'v-org-goto-action))
 
 
 ;;;###autoload
@@ -164,48 +160,65 @@
     (forward-line (1- line))))
 
 
-(defun v-org-outline (file)
-  "Parse org FILE use rg."
-  (let* ((cmd (format "rg -n '^\\*+ ' %s" file))
+(defun v-org-outline (&rest paths)
+  "Get all headings of all org files in the PATHS.
+The element of PATHS can be either a file or a directory.
+If PATHS is empty, `org-directory' is used as the default path."
+  (if (= (length paths) 0)
+      (push org-directory paths))
+  (let* ((cmd (format "rg -H -n -g '*.org' '^\\*+ .+' %s" (s-join " " paths)))
          (output (shell-command-to-string cmd))
          (last-level 0)
          ;; level-title: `'(1 title1 2 title2)`
          level-titles)
     (->>
-     ;; A line is like this: `10690:**** 成都`
      (split-string output "\n" t)
+     (mapcar #'v-org-outline-parse-rg)
      (mapcar
       (lambda (x)
-        (let ((index-of-colon (s-index-of ":" x))
-              (index-of-space (s-index-of " " x)))
-          `(line
-            ,(->> (substring x 0 index-of-colon)
-                  (string-to-number))
-            level
-            ,(->> index-of-space
-                  (substring x (+ index-of-colon 1))
-                  (length))
-            title
-            ,(substring x (+ index-of-space 1))))))
-     (mapcar
-      (lambda (x)
-        (let ((level (plist-get x 'level))
-              (title (plist-get x 'title))
-              (line (plist-get x 'line)))
+        (let ((file (plist-get x 'file))
+              (line (plist-get x 'line))
+              (level (plist-get x 'level))
+              (title (plist-get x 'title)))
           ;; Delete title when level up
           (-map (lambda (x)
                   (setq level-titles (plist-put level-titles x "")))
                 (number-sequence level last-level))
           (setq last-level level)
           (setq level-titles (plist-put level-titles level title))
-          (let* ((file-base (file-name-base file))
+          (let* ((file-heading (->> file
+                                    (s-replace (f-expand org-directory) "")
+                                    (f-no-ext)))
                  ;; Headline path
                  (path (->> (number-sequence 1 level)
                             (-map (lambda (y) (plist-get level-titles y)))
                             (s-join "/")
-                            (format "%s/%s" file-base))))
+                            (concat file-heading "/"))))
             `(,path . (,file . ,line)))))))))
 
+(defun v-org-outline-parse-rg (line)
+  "Parse a ripgrep LINE.
+e.g.: './a.org:202:*** video 4'"
+  (->> line
+       (s-match
+        ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Rx-Constructs.html
+        (rx
+         (group (1+ nonl))
+         ":"
+         (group (1+ num))
+         ":"
+         (group (1+ "*"))
+         " "
+         (group (1+ nonl))))
+       ((lambda (matches)
+          `(file
+            ,(-second-item matches)
+            line
+            ,(string-to-number (-third-item matches))
+            level
+            ,(length (-fourth-item matches))
+            title
+            ,(-fifth-item matches))))))
 
 
 ;;;; Subtree commands:
