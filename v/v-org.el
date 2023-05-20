@@ -188,7 +188,10 @@ If PATHS is empty, `org-directory' is used as the default path."
         (let ((file (plist-get x 'file))
               (line (plist-get x 'line))
               (level (plist-get x 'level))
-              (title (plist-get x 'title)))
+              (title (plist-get x 'title))
+              (tag (plist-get x 'tag)))
+          (when tag
+            (setq title (concat title " " tag)))
           ;; Delete title when level up
           (-map (lambda (x)
                   (setq level-titles (plist-put level-titles x "")))
@@ -205,29 +208,40 @@ If PATHS is empty, `org-directory' is used as the default path."
                             (concat file-heading "/"))))
             `(,path . (,file . ,line)))))))))
 
+(defvar v-org-outline-rg-regexp
+  (rx
+   (group (1+ nonl))                    ; filename
+   ":"
+   (group (1+ num))                     ; line number
+   ":"
+   (group (1+ "*"))                     ; level
+   " "
+   (group  (+? nonl))                   ; title
+   (? (group ":" (1+ nonl) ":"))        ; tags
+   eol)
+  "The regexp for parsing the rigrep line.")
+
+(defmacro pop-to-plist (list plist property &optional convert)
+  "Pop element in LIST to PLIST with PROPERTY.
+If CONVERT is not nil, use it to transform the popped value."
+  `(let ((v (pop ,list)))
+     (if ,convert
+         (setq v (funcall ,convert v)))
+     (setq ,plist (plist-put ,plist ,property v))))
+
 (defun v-org-outline-parse-rg (line)
   "Parse a ripgrep LINE.
 e.g.: './a.org:202:*** video 4'"
-  (->> line
-       (s-match
-        ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Rx-Constructs.html
-        (rx
-         (group (1+ nonl))
-         ":"
-         (group (1+ num))
-         ":"
-         (group (1+ "*"))
-         " "
-         (group (1+ nonl))))
-       ((lambda (matches)
-          `(file
-            ,(-second-item matches)
-            line
-            ,(string-to-number (-third-item matches))
-            level
-            ,(length (-fourth-item matches))
-            title
-            ,(-fifth-item matches))))))
+  (let* ((matches (s-match v-org-outline-rg-regexp line))
+         plist)
+    (pop matches)
+    (pop-to-plist matches plist 'file)
+    (pop-to-plist matches plist 'line #'string-to-number)
+    (pop-to-plist matches plist 'level #'length)
+    (pop-to-plist matches plist 'title #'s-trim)
+    (pop-to-plist matches plist 'tag)
+    (pop-to-plist matches plist 'remain)
+    plist))
 
 
 ;;;; Subtree commands:
