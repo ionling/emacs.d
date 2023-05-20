@@ -3,17 +3,19 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration org-mode
-;; Version: 20230405
-;; Package-Requires: (org dash f s counsel)
+;; Version: 20230520
+;; Package-Requires: (org org-cliplink dash f s counsel)
 
 ;;; Commentary:
 
 ;;; Code:
+(require 'org)
+(require 'org-element)
 
 (require 'counsel)
 (require 'dash)
 (require 'f)
-(require 'org)
+(require 'org-cliplink)
 (require 's)
 
 
@@ -26,6 +28,7 @@
       (use-package org
         :custom
         (org-archive-location "~/org/datetree.org::datetree/")
+        (org-footnote-section nil "Convenient when moving a subtree")
         (org-image-actual-width nil)
         (org-log-done 'time)
         (org-modules '(ol-info org-id))
@@ -78,8 +81,14 @@
 
       (use-package org-cliplink
         :general
-        (v-org-map "l" #'org-cliplink)))))
+        (v-org-map "l" #'org-cliplink))
 
+      (use-package org-super-agenda
+        :hook (org-mode . org-super-agenda-mode)
+        :custom
+        (org-super-agenda-groups
+         '((:tag "weekly")
+           (:auto-category t)))))))
 
 ;;;###autoload
 (defun org-x-goto-indirect-buffer ()
@@ -252,6 +261,58 @@ e.g.: './a.org:202:*** video 4'"
     (make-indirect-buffer (current-buffer) headline t)
     (switch-to-buffer headline)
     (org-narrow-to-subtree)))
+
+
+;;;; Misc
+
+(defun v-org-cliplink-markdown-mode-link-tansformer (url title)
+  "Generate a Markdown link based on the given URL and TITLE.
+The TITLE will be transformed by certain rules,
+like `org-cliplink-org-mode-link-transformer'."
+  (if (not title)
+      url
+    (format "[%s](%s)"
+            (org-cliplink-elide-string
+             (org-cliplink-escape-html4
+              (org-cliplink-title-for-url url title))
+             org-cliplink-max-length)
+            url)))
+
+;;;###autoload
+(defun v-org-cliplink-markdown ()
+  "The Markdown version of `org-cliplink'."
+  (interactive)
+  (org-cliplink-insert-transformed-title
+   (org-cliplink-clipboard-content)
+   #'v-org-cliplink-markdown-mode-link-tansformer))
+
+;;;###autoload
+(defun v-org-link-show ()
+  "Show the raw-link of the org link element at point."
+  (interactive)
+  (let* ((el (org-element-context))
+         (type (org-element-type el)))
+    (if (not (eq type 'link))
+        (message "Not a link, but a %s" type)
+      (message "Link: %s" (org-element-property :raw-link el)))))
+
+;;;###autoload
+(defun v-org-set-property-created-at ()
+  "Set CREATED_AT property of current entry."
+  (interactive)
+  (org-set-property
+   "CREATED_AT"
+   (with-temp-buffer
+     (org-insert-time-stamp (current-time) t t))))
+
+;;;###autoload
+(defun v-org-set-property-douban-short-commented-at ()
+  "Set DOUBAN_SHORT_COMMENTED_AT property of current entry."
+  (interactive)
+  (org-set-property
+   "DOUBAN_SHORT_COMMENTED_AT"
+   (with-temp-buffer
+     (org-insert-time-stamp (current-time) t t))))
 
 
 ;; e.g.:
