@@ -297,7 +297,7 @@ like `org-cliplink-org-mode-link-transformer'."
       (message "Link: %s" (org-element-property :raw-link el)))))
 
 ;;;###autoload
-(defun v-org-set-property-created-at ()
+(defun v-org-property-set-created-at ()
   "Set CREATED_AT property of current entry."
   (interactive)
   (org-set-property
@@ -306,7 +306,7 @@ like `org-cliplink-org-mode-link-transformer'."
      (org-insert-time-stamp (current-time) t t))))
 
 ;;;###autoload
-(defun v-org-set-property-douban-short-commented-at ()
+(defun v-org-property-set-douban-short-commented-at ()
   "Set DOUBAN_SHORT_COMMENTED_AT property of current entry."
   (interactive)
   (org-set-property

@@ -43,9 +43,7 @@ A wrapper of `run-with-idle-timer'."
 (defmacro v-defmodule (name &rest body)
   "Define a NAME module.  BODY are forms to eval."
   (declare (indent defun))
-  (if v-modules
-      (add-to-list 'v-modules name)
-    (setq v-modules (list name)))
+  (add-to-list 'v-modules name)
   (let ((func-name (format "v-load-%s" (symbol-name name))))
     `(defun ,(intern func-name) ()
        ,(format "Load the module %s" name)
@@ -93,9 +91,11 @@ Supported keyword ARGS:
   "Register the file EXT with the FUNC."
   (setq v-init-by-file-ext (plist-put v-init-by-file-ext ext func)))
 
+;; Don't use f-ext, as we want to minimize dependencies 
+;; when Emacs is first booted without ELPA packages.
 (defun v-init-by-file-ext ()
   "Automatically run the init function according to file extension."
-  (let* ((ext (f-ext buffer-file-name))
+  (let* ((ext (file-name-extension buffer-file-name))
          (inited (intern (format "v-init-%s" ext))))
     (when (and ext (not (boundp inited)))
       (let ((func (plist-get v-init-by-file-ext (intern ext))))
@@ -212,6 +212,22 @@ Keywords:
 
 (use-package delight)
 
+;;;;; use-package extensions
+
+(push :doc use-package-keywords)
+
+(defvar v-package-docs nil "The docs of `:doc' keyword.")
+
+(defun use-package-normalize/:doc (_name _keyword args)
+  "Normalize ARGS for `:doc' keyword."
+  (car args))
+
+(defun use-package-handler/:doc (name _keyword doc rest state)
+  "Handler for `:doc' keyword."
+  (let ((body (use-package-process-keywords name rest state)))
+    (use-package-concat
+     body
+     `((setq v-package-docs (plist-put v-package-docs ',name ,doc))))))
 
 
 ;;;; Key binding

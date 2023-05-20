@@ -97,6 +97,11 @@
   :hook (v-editor . global-aggressive-indent-mode))
 
 
+;;;; Multiple
+(use-package iedit
+  :bind ("C-;" . iedit-mode))
+
+
 ;;;; Outline
 (use-package outline
   :custom
@@ -159,6 +164,13 @@ Refer https://stackoverflow.com/a/23588908/7134763."
   (goto-char end)
   (yank)
   (comment-region beg end arg))
+
+(use-package golden-ratio
+  :doc
+  "Enlarge the selected window"
+  :custom
+  (golden-ratio-adjust-factor 0.9)
+  :hook (v-editor . golden-ratio-mode))
 
 
 (provide 'init-editor)

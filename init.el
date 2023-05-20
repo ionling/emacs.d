@@ -3,14 +3,14 @@
 ;;; Code:
 
 ;; Speedup startup
-(let ((gct-original gc-cons-threshold)
-      (fnha-original file-name-handler-alist))
-  (setq gc-cons-threshold (* 1024 1024 27))
+(let ((fnha-original file-name-handler-alist))
+  (setq gc-cons-threshold most-positive-fixnum)
   (setq file-name-handler-alist nil)
   (run-with-idle-timer
-   4 nil
+   1 nil
    (lambda ()
-     (setq gc-cons-threshold gct-original)
+     ;; https://emacs-lsp.github.io/lsp-mode/page/performance/#adjust-gc-cons-threshold
+     (setq gc-cons-threshold 134217728) ; 128MiB
      (setq file-name-handler-alist fnha-original)
      (message "gc-cons-threshold and file-name-handler-alist restored"))))
 

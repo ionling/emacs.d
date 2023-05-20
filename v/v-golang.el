@@ -70,6 +70,11 @@
   (let ((default-directory (projectile-project-root)))
     (shell-command "swag init" "*swag init*")))
 
+(defun v-golang-swag-fmt ()
+  "Call `swag fmt` in project root."
+  (interactive)
+  (let ((default-directory (projectile-project-root)))
+    (shell-command "swag fmt" "*swag fmt*")))
 
 (defun v-golang-golangci-lint ()
   "Call `golangci-lint run` in project root."
