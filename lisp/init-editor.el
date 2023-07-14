@@ -14,9 +14,23 @@
 
 
 ;;;; Better defaults
-(set-default 'fill-column 80)
+(set-default 'fill-column 100)
 (setq column-number-indicator-zero-based nil)
 (setq make-backup-files nil)
+
+
+(defun v-default-editor ()
+  "Editor related default configs."
+  (column-number-mode)
+  (global-auto-revert-mode)
+  (tool-bar-mode 0)
+  (window-divider-mode 0)
+  (setq indicate-buffer-boundaries t)
+  ;; In macOS, disabling `menu-bar-mode' will make maximize button not working
+  (unless (eq window-system 'mac)
+    (menu-bar-mode 0)))
+
+(add-hook 'v-editor-hook #'v-default-editor)
 
 
 (defun buffer-name-list ()

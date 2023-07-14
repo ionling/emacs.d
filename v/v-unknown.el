@@ -11,6 +11,46 @@
 (require 'v-pkg)
 (v-require projectile)
 
+;;;; Douban
+(defun v-get-url (url coding)
+  "Parse the content from the given URL using CODING."
+  (with-current-buffer (url-retrieve-synchronously url)
+    (prog1
+        (decode-coding-string (buffer-string) coding)
+      (kill-buffer))))
+
+(defvar v-parse-douban-short-comment-regex
+  (rx
+   "TalionData.commentList"
+   (1+ anychar)
+   "name: \""
+   (group (1+ nonl))
+   "\""
+   (1+ anychar)
+   "comment: '"
+   (group (1+ nonl))
+   "',")
+  "Regex used by `v-douban-short-comment-to-org'.")
+
+;;;###autoload
+(defun v-douban-short-comment-to-org (url)
+  "Parse short comments from the URL into org mode quote."
+  (interactive "sURL: ")
+  (url-retrieve
+   url
+   (lambda (status url buf)
+     (let ((content (v-get-url url 'utf-8))
+           redirect-url name comment matches)
+       (setq redirect-url (plist-get status :redirect))
+       (setq matches (s-match v-parse-douban-short-comment-regex content))
+       (pop matches)
+       (setq name (pop matches))
+       (setq comment (pop matches))
+       (with-current-buffer buf
+         (insert (format "[[%s][%s]]:\n#+begin_quote\n%s\n#+end_quote"
+                         redirect-url name comment)))))
+   `(,url ,(current-buffer))))
+
 
 ;;;; Visual Studio Code
 
