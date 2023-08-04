@@ -3,6 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration completion
+;; Version: 20230804
 ;; Package-Requires: (company company-box company-tabnine company-try-hard)
 
 ;;; Commentary:
@@ -28,7 +29,8 @@
         (company-show-numbers t)
         (company-tooltip-align-annotations t)
         (company-backends
-         '(company-capf
+         ;; The company-yasnippet backend will always shadow backends that come after it.
+         '((company-capf :with company-yasnippet)
            company-files
            company-dabbrev-code
            company-keywords
