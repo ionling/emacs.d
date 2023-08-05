@@ -25,7 +25,13 @@
 (setq v-lang-find-apropos-func #'xref-find-apropos)
 
 
+;; Deprecated as of 20230805, use apheleia instead.
 (use-package format-all)
+(use-package apheleia
+  :defer 1
+  :config
+  (setf (alist-get 'protobuf-mode apheleia-mode-alist) 'clang-format)
+  (apheleia-global-mode))
 
 
 (v-defmodule docker

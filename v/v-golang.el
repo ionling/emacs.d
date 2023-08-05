@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration golang
-;; Version: 20221220
+;; Version: 20230805
 ;; Package-Requires: (f go-mode golint gotest go-gen-test go-playground popwin
 ;;   projectile)
 
@@ -29,7 +29,6 @@
         :custom
         (gofmt-command "goimports")
         :hook
-        (before-save . gofmt-before-save)
         (outline-minor-mode . v-golang-outline-set-local))
 
       (use-package golint)
