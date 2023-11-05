@@ -11,6 +11,7 @@
 (use-package git-modes)
 
 (use-package blamer
+  :tags git
   :defer 4
   :custom
   (blamer-idle-time 1)
@@ -20,6 +21,7 @@
 
 
 (use-package git-messenger
+  :tags git
   :general
   (v-git-map "g" #'git-messenger:popup-message)
   :config
@@ -27,6 +29,7 @@
 
 
 (use-package git-gutter
+  :tags git
   :delight
   :defer 4
   :custom

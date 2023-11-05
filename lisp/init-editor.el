@@ -126,6 +126,7 @@
 
 ;;;; Paren edit
 (use-package smartparens
+  :tags parens
   :delight
   :hook ((v-editor . smartparens-global-mode)
          ;; https://i.loli.net/2020/12/28/SIGCO29ZDX6wBYl.gif
@@ -136,6 +137,7 @@
 
 ;;;; Region
 (use-package expand-region
+  :tags region
   :bind ("C-=" . er/expand-region))
 
 
@@ -146,6 +148,7 @@
 
 ;;;; Search
 (use-package deadgrep
+  :tags search
   :bind
   (:map v-point-map
         ("g" . deadgrep)))              ; Grep
@@ -180,11 +183,19 @@ Refer https://stackoverflow.com/a/23588908/7134763."
   (comment-region beg end arg))
 
 (use-package golden-ratio
+  :delight " GR"
   :doc
   "Enlarge the selected window"
   :custom
   (golden-ratio-adjust-factor 0.9)
   :hook (v-editor . golden-ratio-mode))
+
+
+(use-package mwim
+  :tags move
+  :bind
+  ("C-a" . mwim-beginning)
+  ("C-e" . mwim-end))
 
 
 (provide 'init-editor)

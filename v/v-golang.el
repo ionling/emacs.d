@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration golang
-;; Version: 20230805
+;; Version: 20231105
 ;; Package-Requires: (f go-mode golint gotest go-gen-test go-playground popwin
 ;;   projectile)
 
@@ -31,12 +31,12 @@
         :hook
         (outline-minor-mode . v-golang-outline-set-local))
 
-      (use-package golint)
+      (use-package golint :tags golang lint)
 
-      (use-package gotest)
+      (use-package gotest :tags golang test)
 
       ;; Generate test with gotests
-      (use-package go-gen-test)
+      (use-package go-gen-test :tags golang test)
 
       (use-package go-playground))))
 

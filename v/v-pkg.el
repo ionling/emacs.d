@@ -1,5 +1,5 @@
 ;;; v-pkg.el --- Vision package management -*- lexical-binding: t; -*-
-;; Version: 20221220
+;; Version: 20231105
 ;;; Commentary:
 ;;; Code:
 
@@ -54,6 +54,30 @@ see `use-package-process-keywords' for REST and STATE."
 
 (push-after :v-ensure :disabled 'use-package-keywords)
 
+;;;;;; tags
+(add-to-list 'use-package-keywords :tags)
+
+(defvar v-pkg-tags nil "All package tags.")
+
+(defun use-package-normalize/:tags (_name _keyword args)
+  "Normalize ARGS for `:tags' keyword."
+  args)
+
+(defun use-package-handler/:tags (name _keyword args rest state)
+  "Handle `:tags' ARGS for NAME package.
+see `use-package-process-keywords' for REST and STATE."
+  (let ((body (use-package-process-keywords name rest state)))
+    (apply #'use-package-concat
+           body
+           (mapcar
+            (lambda (tag)
+              (let ((tag-var (intern  (format "v-pkg-tag-%s" tag))))
+                `((unless (boundp ',tag-var)
+                    (defvar ,tag-var nil
+                      ,(format "Tags for package %s." name)))
+                  (add-to-list ',tag-var ',name )
+                  (add-to-list 'v-pkg-tags ',tag))))
+            args))))
 
 (provide 'v-pkg)
 
