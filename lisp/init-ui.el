@@ -55,7 +55,12 @@
   (use-package doom-themes
     :config
     (doom-themes-visual-bell-config)
-    (doom-themes-org-config))
+    (with-eval-after-load 'org
+      (doom-themes-org-config))
+    (with-eval-after-load 'neotree
+      (doom-themes-neotree-config))
+    (with-eval-after-load 'treemacs
+      (doom-themes-treemacs-config)))
 
   (use-package doom-modeline
     :custom

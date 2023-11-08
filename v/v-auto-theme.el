@@ -23,6 +23,7 @@
       (calendar-longitude 104.066803))
 
     (use-package circadian
+      :disabled
       :if window-system
       :custom
       (circadian-themes `((:sunrise . ,v-light-theme)

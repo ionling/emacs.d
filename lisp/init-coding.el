@@ -28,6 +28,7 @@
 ;; Deprecated as of 20230805, use apheleia instead.
 (use-package format-all)
 (use-package apheleia
+  :delight " Ap"
   :defer 1
   :config
   (setf (alist-get 'protobuf-mode apheleia-mode-alist) 'clang-format)

@@ -55,6 +55,7 @@
       :delight
       :custom
       (ivy-count-format "(%d/%d) ")
+      (ivy-height 12)
       :config
       (ivy-mode))
 

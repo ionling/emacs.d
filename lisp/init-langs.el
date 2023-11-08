@@ -24,6 +24,7 @@
 
 (v-defmodule elisp
   (use-package nameless
+    :delight
     :hook (emacs-lisp-mode . nameless-mode)))
 
 

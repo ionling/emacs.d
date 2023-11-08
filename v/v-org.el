@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration org-mode
-;; Version: 20230520
+;; Version: 20231108
 ;; Package-Requires: (org org-cliplink dash f s counsel)
 
 ;;; Commentary:
@@ -299,6 +299,27 @@ like `org-cliplink-org-mode-link-transformer'."
   (org-cliplink-insert-transformed-title
    (org-cliplink-clipboard-content)
    #'v-org-cliplink-markdown-mode-link-tansformer))
+
+(defvar v-org-diary-workflowy-line-regex
+  (rx "- " (group (+ num)) " " (group (+ nonl)))
+  "Regex used to match diary line in the WorkfFlowy.
+Used in `v-org-diary-from-workflowy'.")
+
+;;;###autoload
+(defun v-org-diary-from-workflowy (diary &optional rev)
+  "Import DIARY from the WorkfFlowy, and insert it in the org format.
+If REV the insert order will be reversed."
+  (interactive "*s\nP")
+  (-as-> diary it
+         (s-lines it)
+         (-filter (-not #'string-blank-p) it)
+         (if rev (reverse it) it)
+         (-map (lambda (x) (cdr (s-match v-org-diary-workflowy-line-regex x))) it)
+         (dolist (line it)
+           (org-insert-heading)
+           (insert (-first-item line))
+           (insert "\n")
+           (insert (-second-item line)))))
 
 ;;;###autoload
 (defun v-org-link-show ()

@@ -35,6 +35,7 @@
   :custom
   (git-gutter:hide-gutter t)
   (git-gutter:update-interval 1)
+  (git-gutter:disabled-modes '(org-mode))
   :general
   (v-git-map
    "m" #'git-gutter:mark-hunk
