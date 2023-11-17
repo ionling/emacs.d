@@ -10,15 +10,6 @@
 
 (use-package git-modes)
 
-(use-package blamer
-  :tags git
-  :defer 4
-  :custom
-  (blamer-idle-time 1)
-  (blamer-min-offset 10)
-  :config
-  (global-blamer-mode 1))
-
 
 (use-package git-messenger
   :tags git
@@ -47,6 +38,10 @@
   :config
   (global-git-gutter-mode))
 
+(use-package sideline-blame
+  :after sideline
+  :init
+  (add-to-list 'sideline-backends-right #'sideline-blame))
 
 (use-package vc :ensure nil
   :custom

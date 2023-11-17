@@ -71,7 +71,16 @@
     :custom
     (flycheck-posframe-position 'window-center)
     :config
-    (flycheck-posframe-configure-pretty-defaults)))
+    (flycheck-posframe-configure-pretty-defaults))
+
+  (use-package sideline-flycheck
+    :after (sideline flycheck)
+    :custom
+    (sideline-flycheck-show-checker-name t)
+    :init
+    (add-to-list 'sideline-backends-right #'sideline-flycheck)
+    :hook
+    (flycheck-mode . sideline-flycheck-setup)))
 
 
 (v-defmodule lsp
@@ -80,7 +89,14 @@
   (use-package lsp-ui
     :custom
     (lsp-ui-doc-position 'top)
-    (lsp-ui-doc-show-with-cursor t))
+    (lsp-ui-doc-show-with-cursor t)
+    (lsp-ui-sideline-show-code-actions nil "Use `sideline-lsp' instead")
+    (lsp-ui-sideline-show-diagnostics nil "Use `sideline-flycheck' instead"))
+
+  (use-package sideline-lsp
+    :after (sideline lsp-mode)
+    :init
+    (add-to-list 'sideline-backends-right #'sideline-lsp))
 
   (use-package lsp-mode
     :delight

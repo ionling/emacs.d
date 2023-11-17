@@ -43,6 +43,13 @@
   :config
   (setq pangu-spacing-real-insert-separtor t))
 
+(use-package sideline
+  :delight
+  :custom
+  (sideline-display-backend-name t)
+  (sideline-delay .4)
+  :hook
+  (v-ui . global-sideline-mode))
 
 ;; https://i.loli.net/2021/02/18/6JTOmoUdvt5yf1w.gif
 (use-package volatile-highlights
