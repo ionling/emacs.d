@@ -1,6 +1,6 @@
 ;;; v-file.el --- File related functions  -*- lexical-binding: t -*-
 
-;; Version: 20211208
+;; Version: 20240322
 
 ;;; Commentary:
 ;;; Code:
@@ -10,33 +10,34 @@
 (require 'dash)
 
 
-;;;###autoload
-(defun v-copy-file-name ()
-  "Copy file name to clipboard."
-  (interactive)
-  (if (not buffer-file-name)
-      (message "Yet, no file name")
-    (kill-new buffer-file-name)
-    (message "Copied file name: %s" buffer-file-name)))
-
+;;;; Buffer
 
 ;;;###autoload
-(defun v-show-file-name ()
-  "Show the full path file name in the minibuffer."
-  (interactive)
-  (if buffer-file-name
-      (message buffer-file-name)
-    (message "Yet, no file name")))
-
+(defun v-file-buffer-move (dir)
+  "Move both current buffer and file it's visiting to DIR."
+  (interactive "DNew directory: ")
+  (let* ((name (buffer-name))
+         (filename (buffer-file-name))
+         (dir
+          (if (string-match dir "\\(?:/\\|\\\\)$")
+              (substring dir 0 -1) dir))
+         (newname (concat dir "/" name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (copy-file filename newname 1)
+      (delete-file filename)
+      (set-visited-file-name newname)
+      (set-buffer-modified-p nil)
+      t)))
 
 ;; https://sites.google.com/site/steveyegge2/my-dot-emacs-file
 ;;;###autoload
-(defun v-rename-file-and-buffer (new-name)
+(defun v-file-buffer-rename (new-name)
   "Rename both current buffer and file it's visiting to NEW-NAME."
   (interactive (->> (or buffer-file-name  "")
-                 file-name-nondirectory
-                 (read-string "New name: " )
-                 list))
+                    file-name-nondirectory
+                    (read-string "New name: " )
+                    list))
   (cond ((not buffer-file-name)
          (message "Buffer '%s' is not visiting a file!" (buffer-name)))
         ((get-buffer new-name)
@@ -50,7 +51,7 @@
 
 ;; https://emacsredux.com/blog/2013/04/03/delete-file-and-buffer/
 ;;;###autoload
-(defun v-delete-file-and-buffer ()
+(defun v-file-buffer-delete ()
   "Kill the current buffer and deletes the file it is visiting."
   (interactive)
   (let ((filename (buffer-file-name)))
@@ -63,13 +64,15 @@
 
 
 ;;;###autoload
-(defun v-make-temp-file-and-buffer (extension)
+(defun v-file-buffer-make-temp (extension)
   "Create a temporary file with EXTENSION and open it."
   (interactive (list (read-string "File extension: ")))
   (->> (concat "." extension)
        (make-temp-file "" nil)
        find-file))
 
+
+;;;; Sudo
 
 (defun doom--sudo-file-path (file)
   "Generate sudo path for FILE."
@@ -86,14 +89,14 @@
 
 
 ;;;###autoload
-(defun doom/sudo-find-file (file)
+(defun v-file-sudo-find (file)
   "Open FILE as root."
   (interactive "FOpen file as root: ")
   (find-file (doom--sudo-file-path file)))
 
 
 ;;;###autoload
-(defun doom/sudo-this-file ()
+(defun v-file-sudo-this ()
   "Open the current file as root."
   (interactive)
   (find-file
@@ -102,6 +105,27 @@
         (when (or (derived-mode-p 'dired-mode)
                   (derived-mode-p 'wdired-mode))
           default-directory)))))
+
+
+;;;; Misc
+
+;;;###autoload
+(defun v-file-copy-name ()
+  "Copy file name to clipboard."
+  (interactive)
+  (if (not buffer-file-name)
+      (message "Yet, no file name")
+    (kill-new buffer-file-name)
+    (message "Copied file name: %s" buffer-file-name)))
+
+
+;;;###autoload
+(defun v-file-show-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (if buffer-file-name
+      (message buffer-file-name)
+    (message "Yet, no file name")))
 
 
 (provide 'v-file)

@@ -1,6 +1,6 @@
 ;;; v-unknown.el --- Some unknown functions or commands
 
-;; Version: 20221220
+;; Version: 20240321
 
 ;;; Commentary:
 
@@ -9,6 +9,7 @@
 
 ;;; Code:
 (require 'v-pkg)
+(require 's)
 (v-require projectile)
 
 ;;;; Douban
@@ -101,6 +102,12 @@ e.g. https://mp.weixin.qq.com/s?__biz=mzu5mzyznzmzma==&mid=2247483692&idx=1&sn=e
          (kill-new)
          (message "Copied cleaned URL: %s"))))
 
+;;;###autoload
+(defun v-window-prev ()
+  "Go to previous window."
+  ;; REF https://emacsredux.com/blog/2013/03/30/go-back-to-previous-window/
+  (interactive)
+  (other-window -1))
 
 (provide 'v-unknown)
 ;;; v-unknown.el ends here

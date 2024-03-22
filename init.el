@@ -160,6 +160,9 @@
   :type 'string
   :group 'v-proxy)
 
+(defvar v-proxy-old nil
+  "Old proxy config value.")
+
 (defun v-proxy-config ()
   "Show current proxy config."
   (interactive)
@@ -174,8 +177,17 @@ Refer https://emacs-china.org/t/topic/2808/24."
   :lighter " Proxy"
   (setq url-proxy-services
         (if v-proxy-mode
-            `(("http" . ,v-proxy-config)
-              ("https" . ,v-proxy-config)))))
+            (progn
+              (setq v-proxy-old url-proxy-services)
+              `(("http" . ,v-proxy-config)
+                ("https" . ,v-proxy-config)))
+          (setq url-proxy-services v-proxy-old))))
+
+
+(defun v-proxy-unset ()
+  "Unset proxy config."
+  (interactive)
+  (setq url-proxy-services nil))
 
 
 ;;;; Keyboard
