@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration org-mode
-;; Version: 20231108
+;; Version: 20240716
 ;; Package-Requires: (org org-cliplink dash f s counsel)
 
 ;;; Commentary:
@@ -45,18 +45,21 @@
          "s" #'v-org-search
          "b" #'v-org-subtree-indirect-buffer)
         :config
-        (setq org-plantuml-jar-path
-              (expand-file-name "plantuml.1.2019.12.jar" org-directory)
+        (setq org-plantuml-jar-path (expand-file-name "plantuml.1.2019.12.jar" org-directory)
               org-agenda-files `(,(expand-file-name "agenda" org-directory))
+              org-clock-in-switch-to-state "DOING"
+              org-clock-rounding-minutes 5
+              org-clock-sound t
+              org-log-into-drawer t
               org-todo-keywords '((sequence "TODO" "DOING" "|" "DONE(d)" "ABORT"))
               org-todo-keyword-faces '(("DOING" . "purple") ("ABORT" . "sea green"))
-              org-src-lang-modes
-              (append org-src-lang-modes
-                      '(("less" . less-css)
-                        ("py" . python)
-                        ("puml" . plantuml)
-                        ("toml" . conf-toml)
-                        ("zsh" . sh))))
+              org-show-notification-timeout 8
+              org-src-lang-modes (append org-src-lang-modes
+                                         '(("less" . less-css)
+                                           ("py" . python)
+                                           ("puml" . plantuml)
+                                           ("toml" . conf-toml)
+                                           ("zsh" . sh))))
         (defalias 'org-babel-execute:py 'org-babel-execute:python)
         (defalias 'org-babel-execute:puml 'org-babel-execute:plantuml)
         (org-babel-do-load-languages
