@@ -303,6 +303,60 @@ like `org-cliplink-org-mode-link-transformer'."
    (org-cliplink-clipboard-content)
    #'v-org-cliplink-markdown-mode-link-tansformer))
 
+
+(defvar v-org-clock-end-regex
+  (rx "--"
+      (group-n 1
+        "["
+        (repeat 4 digit) "-"            ; YYYY-
+        (repeat 2 digit) "-"            ; MM-
+        (repeat 2 digit) " "            ; DD
+        (one-or-more (in "A-Za-z")) " " ; Day
+        (repeat 2 digit) ":"            ; HH:
+        (repeat 2 digit)                ; MM
+        "]")))
+
+(defun v-org-clock-get-last-end ()
+  "Get the end time of the last clock entry of the current subtree.
+By GPT40."
+  (save-excursion
+    (org-back-to-heading t)
+    (let ((end (save-excursion (org-end-of-subtree t t))))
+      (re-search-forward org-clock-string end t)
+      (let ((clock-line (thing-at-point 'line t)))
+        (if (string-match v-org-clock-end-regex clock-line)
+            (match-string 1 clock-line))))))
+
+
+(defun v-org-time-inactive (&optional time zone)
+  "Generate an inactive timestamp according to TIME and ZONE."
+  (format-time-string "[%Y-%m-%d %a %H:%M]" time zone))
+
+
+;;;###autoload
+(defun v-org-todo-set-done-time ()
+  "Set the CLOSED timestamp of the current todo entry to DONE-TIME."
+  (interactive)
+  (if (org-get-todo-state)  ;; Ensure it's a todo entry
+      (org-todo "DONE")
+    (user-error "Not a todo entry"))
+
+  (let ((done-time
+         (or (v-org-clock-get-last-end)
+             (with-temp-buffer (v-org-time-inactive)))))
+    (save-excursion
+      (let ((end (save-excursion (org-end-of-subtree t t))))
+        (org-back-to-heading t)
+        (cond
+         ((re-search-forward org-closed-time-regexp end t)
+          (replace-match (concat "CLOSED: " done-time) t t))
+         ((re-search-forward org-scheduled-time-regexp end t)
+          (replace-match (concat "CLOSED: " done-time " " (match-string 0)) t t))
+         (t
+          (end-of-line)
+          (insert (concat "\nCLOSED: " done-time "\n"))))))))
+
+
 (defvar v-org-diary-workflowy-line-regex
   (rx "- " (group (+ num)) " " (group (+ nonl)))
   "Regex used to match diary line in the WorkfFlowy.
