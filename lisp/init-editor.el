@@ -21,8 +21,10 @@
 
 (defun v-default-editor ()
   "Editor related default configs."
+  (setq-default tab-width 4)
   (column-number-mode)
   (global-auto-revert-mode)
+  (scroll-bar-mode 0)
   (tool-bar-mode 0)
   (window-divider-mode 0)
   (setq indicate-buffer-boundaries t)
@@ -71,9 +73,16 @@
 
 
 ;;;; Buffer
-(use-package ibuffer
+(use-package ibuffer :ensure nil
   :bind ("C-x C-b" . ibuffer))
 
+
+;;;; Comment
+(use-package comment-dwim-2
+  :disabled
+  :bind ("M-;" . comment-dwim-2))
+
+(use-package banner-comment)
 
 (use-package saveplace
   :if v-file-save-place
@@ -82,6 +91,7 @@
 
 ;;;; Display fill-column
 (use-package display-fill-column-indicator
+  :disabled                             ; It's not pretty
   :hook (v-editor . global-display-fill-column-indicator-mode))
 
 
@@ -96,11 +106,13 @@
   :hook (v-editor . v-server-start)
   :config
   ;; fix: Getting attributes: Permission denied, /mnt/wslg/runtime-dir/emacs
-  (setq server-socket-dir (v-join-user-emacsd "server")))
+  (if is-wsl
+      (setq server-socket-dir (v-join-user-emacsd "server"))))
 
 
 ;;;; Fill paragraph
 (use-package aggressive-fill-paragraph
+  :disabled                             ; In favor of semantic linefeeds
   :hook (org-mode . aggressive-fill-paragraph-mode))
 
 
@@ -110,6 +122,8 @@
 (use-package aggressive-indent
   :hook (v-editor . global-aggressive-indent-mode))
 
+(use-package indent-bars
+  :hook ((python-base-mode go-mode) . indent-bars-mode))
 
 ;;;; Multiple
 (use-package iedit

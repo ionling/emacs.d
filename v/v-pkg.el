@@ -1,10 +1,9 @@
 ;;; v-pkg.el --- Vision package management -*- lexical-binding: t; -*-
-;; Version: 20231105
+;; Version: 20241014
 ;;; Commentary:
 ;;; Code:
 
 (require 'package)
-
 (require 'use-package)
 
 (require 'init-core)
@@ -27,19 +26,44 @@
 
 
 ;;;; v-ensure-package
-(defun v-ensure-package (pkg)
-  "Ensure PKG installed."
-  (unless (assoc pkg package-alist)
-    (let* ((sym-name (symbol-name pkg))
-           (filename (concat sym-name ".el"))
-           (paths `(("v" ,filename)
-                    ("site-lisp" ,sym-name)
-                    ("site-lisp" ,filename))))
-      (cl-loop for path in paths
-               for file = (apply #'v-join-user-emacsd path)
-               if (file-exists-p file)
-               return (package-install-file file)))))
 
+(defun v-pkg-compare-version (d1 d2)
+  "Compare the versions of two package descs D1 and D2."
+  (> (car (package-desc-version d1))
+     (car (package-desc-version d2))))
+
+;;;###autoload
+(defun v-pkg-refresh (pkg)
+  "Install the latest version of the PKG and delete olds."
+  (interactive
+   (->> (completing-read "Feature: " features)
+        intern list))
+  (v-pkg-install pkg)
+  (let ((descs (->> (alist-get pkg package-alist)
+                    (-uniq)
+                    (-sort #'v-pkg-compare-version)
+                    (-drop 1))))
+    (dolist (desc descs)
+      (package-delete desc))))
+
+(defun v-pkg-install (pkg)
+  "Install a PKG using `package-install-file'."
+  (let* ((sym-name (symbol-name pkg))
+         (filename (concat sym-name ".el"))
+         (paths `(("v" ,filename)
+                  ("site-lisp" ,sym-name)
+                  ("site-lisp" ,filename))))
+    (cl-loop for path in paths
+             for file = (apply #'v-join-user-emacsd path)
+             if (file-exists-p file)
+             return (package-install-file file))))
+
+(defun v-pkg-ensure (pkg)
+  "Ensure a PKG is installed."
+  (unless (assoc pkg package-alist)
+    (v-pkg-install pkg)))
+
+(defalias 'v-ensure-package #'v-pkg-ensure)
 
 ;;;;; use-package keyword
 (defun use-package-normalize/:v-ensure (_name _keyword args)

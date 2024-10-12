@@ -3,15 +3,17 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration completion
-;; Version: 20230804
-;; Package-Requires: (company company-box company-tabnine company-try-hard)
+;; Version: 20241012
+;; Package-Requires: (company company-box)
 
 ;;; Commentary:
 
 ;;; Code:
 
-(require 'company)
-(require 'company-tabnine)
+(require 'v-pkg)
+
+(v-require company)
+(v-require company-tabnine)
 
 
 ;;;###autoload
@@ -24,7 +26,7 @@
         :defer 4
         :custom
         (company-dabbrev-downcase nil)
-        (company-idle-delay .3)
+        (company-idle-delay .2)
         (company-minimum-prefix-length 2)
         (company-show-numbers t)
         (company-tooltip-align-annotations t)
@@ -35,6 +37,8 @@
            company-dabbrev-code
            company-keywords
            company-dabbrev))
+        :general
+        ("C-'" #'company-other-backend)
         :config
         (global-company-mode))
 
@@ -42,17 +46,50 @@
         :delight
         :hook (company-mode . company-box-mode))
 
-      (use-package company-tabnine
-        :hook
-        (org-mode . v-disable-tabnine-local)
+      ;; FIXME LSP mode 补全有问题, 需要关开一次 fuzzy-mode, 才能正常工作
+      (use-package company-fuzzy
+        :disabled
+        :defer 3
         :config
-        (push 'company-tabnine company-backends))
+        (global-company-fuzzy-mode))
 
-      (use-package company-try-hard
-        :bind ("C-'" . company-try-hard)))))
+      ;; According to its GitHub README:
+      ;;   It has the following feature:
+      ;;     1. It is fast enough for daily use.
+      ;;     2. It works well with CJK language.
+      ;;
+      ;; But the first point, I don not care, and the second point,
+      ;; I can not find CJK problems when using the origin UI, so I disabled it.
+      (use-package company-posframe
+        :disabled
+        :defer 4
+        :delight
+        :hook (company-mode . company-posframe-mode))
+
+      (use-package company-tabnine
+        :disabled
+        :hook
+        ((org-mode . v-disable-tabnine-local)
+         (prog-mode . v-tabnine-enable-local)))
+
+      (use-package company-quickhelp
+        :disabled
+        :hook (company-mode . company-quickhelp-mode))
+
+      (use-package company-statistics
+        :disabled
+        :hook (company-mode . company-statistics-mode)))))
 
 
-(defun v-disable-tabnine-local ()
+(defun v-tabnine-enable-local ()
+  "Enable Tabnine for the current local buffer."
+  (interactive)
+  (let ((clean-backends
+         (remove 'company-tabnine company-backends)))
+    (setq-local company-backends
+                (push 'company-tabnine clean-backends))))
+
+(defun v-tabnine-disable-local ()
   "Disable(not quit) tabnine in current buffer."
   (interactive)
   (setq-local company-backends

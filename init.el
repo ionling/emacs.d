@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+;; 霞鹜文楷真好看, 写代码的心情更愉悦了.
+
 ;; Speedup startup
 (let ((fnha-original file-name-handler-alist))
   (setq gc-cons-threshold most-positive-fixnum)
@@ -62,8 +64,7 @@
     (v-golang-config)
     (setq v-init-golang t)))
 
-(with-eval-after-load 'go-mode
-  (advice-add 'go-mode :before #'v-init-golang))
+(v-init-register-ext 'go #'v-init-golang)
 
 
 (defun v-python ()
@@ -108,6 +109,7 @@
 
 ;; Parallel fetching/byte-compiling
 (use-package feather
+  :disabled
   :defer 5
   :delight
   :config
@@ -117,6 +119,10 @@
 ;;;; Input method
 
 (use-package rime
+  :if is-wsl
+  :bind
+  (:map rime-mode-map
+        ("C-`" . 'rime-send-keybinding))
   :custom
   (default-input-method "rime")
   (rime-show-candidate 'posframe))
@@ -141,6 +147,7 @@
 
 
 (use-package pyim-basedict
+  :disabled
   :after pyim
   :demand t
   :config
@@ -197,7 +204,7 @@ Refer https://emacs-china.org/t/topic/2808/24."
 
 ;;;;; Evil
 (use-package evil
-  :hook (emacs-startup . evil-mode)
+  :hook (v-editor . evil-mode)
   :custom
   (evil-undo-system 'undo-tree)
   :config
