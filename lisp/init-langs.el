@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 (require 'init-core)
+(require 'init-coding)
 
 
 (defvar v-lang-map (make-sparse-keymap))
@@ -17,6 +18,19 @@
 
 
 (v-init python :package python)
+
+;;;; Golang
+
+(defvar v-init-golang nil "Golang config already inited.")
+
+(defun v-init-golang ()
+  "Init golang config."
+  (unless v-init-golang
+    (v-ensure-package 'v-golang)
+    (v-golang-config)
+    (setq v-init-golang t)))
+
+(v-init-register-ext 'go #'v-init-golang)
 
 
 (delight 'prettier-js-mode " Pr" 'prettier-js)
@@ -50,7 +64,7 @@
     :hook
     (js-mode . prettier-js-mode))
 
-  (use-package js
+  (use-package js :ensure nil
     :custom
     (js-indent-level 2 "Keep same to prettier")))
 
@@ -61,6 +75,13 @@
     (with-eval-after-load 'org-src
       (push '("jsx" . rjsx) org-src-lang-modes))))
 
+(use-package fsharp-mode :module fsharp)
+(use-package haskell-mode :module haskell)
+(use-package racket-mode :module racket)
+
+(v-defmodule ruby
+  (use-package enh-ruby-mode)
+  (use-package robe))
 
 (v-defmodule ledger
   (use-package ledger-mode)
@@ -72,9 +93,7 @@
 
 
 (v-defmodule raku
-  (use-package perl6-mode
-    :init
-    (defalias 'raku-mode #'perl6-mode)
+  (use-package raku-mode
     :mode ("\\.raku\\'" . raku-mode)))
 
 
@@ -92,13 +111,22 @@
   (use-package yaml-mode))
 
 
+(v-defmodule plantuml
+  (use-package plantuml-mode
+    :custom
+    (plantuml-default-exec-mode 'executable)
+    (plantuml-indent-level 4)))
+
+;;;; Protocol Buffers
 (defun v-protobuf-config ()
   "Load Protocol Buffers config."
   (use-package protobuf-mode
     :init
     (with-eval-after-load 'evil
+      (defvar evil-normal-state-modes)
       (add-to-list 'evil-normal-state-modes 'protobuf-mode))
     (with-eval-after-load 'aggressive-indent
+      (defvar aggressive-indent-excluded-modes)
       (add-to-list 'aggressive-indent-excluded-modes 'protobuf-mode)))
 
   (protobuf-mode))

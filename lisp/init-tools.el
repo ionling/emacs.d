@@ -1,18 +1,24 @@
 ;;; init-tools.el --- Load some useful tools
 ;;; Commentary:
 ;;; Code:
+(require 'use-package)
+
+(require 'init-modules)
+
+
+(use-package bug-hunter)
 
 (use-package dashboard
-  :init (dashboard-setup-startup-hook)
-  :config
-  (setq
-   dashboard-banner-logo-title "Be who you are"
-   dashboard-center-content  t
-   dashboard-items '((projects . 4)
-                     (recents  . 7)
+  :defer 0.5
+  :custom
+  (dashboard-banner-logo-title "Be who you are")
+  (dashboard-center-content  t)
+  (dashboard-items '((projects . 5)
+                     (recents  . 8)
                      (bookmarks . 4)
-                     (registers . 4))
-   initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+                     (registers . 4)))
+  :config
+  (dashboard-open))
 
 
 (use-package google-this
@@ -32,8 +38,10 @@
 
 
 (use-package wakatime-mode
+  :if (or (executable-find "wakatime-cli")
+          (and (warn "wakatime cli not found") nil))
   :delight
-  :defer 8
+  :defer 1
   :config (global-wakatime-mode))
 
 
@@ -52,13 +60,61 @@
 
 
 (use-package paradox
-  :defer 8
+  :defer 2
   :config
   (paradox-enable))
 
 
 (use-package undo-tree
-  :delight)
+  :delight
+  :defer 0.5
+  :config
+  (global-undo-tree-mode))
+
+(use-package flyspell
+  :delight " Fs"
+  :if v-mod-spell-checking-enabled
+  :hook
+  (prog-mode . flyspell-prog-mode)
+  (org-mode . flyspell-mode)
+  :config
+  (setq ispell-dictionary "en"))
+
+
+(v-defmodule hydra
+  (use-package hydra)
+
+  (use-package hydra-posframe
+    :disabled
+    :ensure nil
+    :quelpa (hydra-posframe :fetcher github :repo "Ladicle/hydra-posframe")
+    :defer 2
+    :custom
+    (hydra-posframe-border-width 2)
+    :custom-face
+    (hydra-posframe-border-face ((t (:background "dark grey"))))
+    :config 
+    (hydra-posframe-enable))
+
+
+  ;; https://github.com/abo-abo/hydra/wiki/Org-clock-and-timers
+  (defhydra hydra-org-clock (:color blue :hint nil)
+    "
+Clock   In/out^     ^Edit^   ^Summary     (_?_)
+-----------------------------------------
+        _i_n         _e_dit   _g_oto entry
+        _c_ontinue   _q_uit   _d_isplay
+        _o_ut        ^ ^      _r_eport
+      "
+    ("i" org-clock-in)
+    ("o" org-clock-out)
+    ("c" org-clock-in-last)
+    ("e" org-clock-modify-effort-estimate)
+    ("q" org-clock-cancel)
+    ("g" org-clock-goto)
+    ("d" org-clock-display)
+    ("r" org-clock-report)
+    ("?" (org-info "Clocking commands"))))
 
 
 (provide 'init-tools)

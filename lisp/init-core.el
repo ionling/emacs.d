@@ -1,13 +1,18 @@
 ;;; init-core.el --- Config core
 ;;; Commentary:
 ;;; Code:
-(require 'v-pkg)
+(require 'package)
 
 
 (defvar v-modules nil)
 
 (defvar v-modules-loaded nil)
 
+(defvar is-wsl (length> (getenv "WSL_DISTRO_NAME") 0)
+  "Whether in WSL environment.")
+
+
+;;;; Callable
 
 ;; Don't use `f' lib, as it will slow down Emacs startup (it requires many packages)
 (defun v-join-user-emacsd (&rest paths)
@@ -53,15 +58,13 @@ A wrapper of `run-with-idle-timer'."
 
 (defmacro v-load (&rest modules)
   "Load MODULES."
-  (dolist (module modules)
-    (cond ((not (memq module v-modules))
-           (user-error "No module: %s" module))
-          ((memq module v-modules-loaded) "Loaded")
-          (t
-           (if v-modules
-               (add-to-list 'v-modules-loaded module)
-             (setq v-modules (list module)))
-           (funcall (intern (format "v-load-%s" (symbol-name module))))))))
+  `(dolist (module ',modules)
+     (cond ((not (memq module v-modules))
+            (user-error "No module: %s" module))
+           ((memq module v-modules-loaded) "Loaded")
+           (t
+            (funcall (intern (format "v-load-%s" (symbol-name module))))
+            (add-to-list 'v-modules-loaded module)))))
 
 
 ;; https://www.emacswiki.org/emacs/KeywordArguments
@@ -91,7 +94,7 @@ Supported keyword ARGS:
   "Register the file EXT with the FUNC."
   (setq v-init-by-file-ext (plist-put v-init-by-file-ext ext func)))
 
-;; Don't use f-ext, as we want to minimize dependencies 
+;; Don't use f-ext, as we want to minimize dependencies
 ;; when Emacs is first booted without ELPA packages.
 (defun v-init-by-file-ext ()
   "Automatically run the init function according to file extension."
@@ -168,22 +171,25 @@ Keywords:
 
 
 ;;;; Package
-(require 'package)
+
+;; 2023-05-07 tsinghua:
+;;   我们检测到您所在的子网和/或所使用的客户端存在大量下载某些较大二进制文件的行为，
+;;   为保证用户的正常使用，我们阻断了此类请求。
 
 (let* ((mirror-163 "https://mirrors.163.com")
        (mirror-tencent "https://mirrors.cloud.tencent.com")
        (mirror-tsinghua "https://mirrors.tuna.tsinghua.edu.cn")
-       (mirror mirror-tsinghua))
+       (mirror-ustc "https://mirrors.ustc.edu.cn")
+       (mirror-zilongshanren "https://elpa.zilongshanren.com")
+       (mirror mirror-ustc))
   (fset 'gen-mirror-url
         (lambda (name)
           `(,name . ,(format "%s/elpa/%s/" mirror name))))
   (setq package-archives
         `(,(gen-mirror-url "gnu")
           ,(gen-mirror-url "melpa")
-          ,(gen-mirror-url "org"))))
+          ,(gen-mirror-url "nongnu"))))
 
-
-(package-initialize)
 
 (setq custom-file (v-join-user-emacsd "custom.el"))
 (v-with-idle-timer .08
@@ -202,11 +208,13 @@ Keywords:
 
 
 (use-package quelpa
+  :disabled                             ; 2022-09-04 May slow Emacs startup
   :custom
   (quelpa-checkout-melpa-p nil))
 
-
-(use-package quelpa-use-package :demand)
+(use-package quelpa-use-package
+  :disabled                             ; Same as up
+  :demand)
 
 (use-package gnu-elpa-keyring-update)
 
@@ -243,6 +251,9 @@ Keywords:
 
 (use-package which-key
   :delight
+  :defer 2
+  :custom
+  (which-key-idle-delay 0.6)
   :general
   (vision-map
    :prefix "k"
@@ -250,28 +261,36 @@ Keywords:
    "k" #'which-key-show-keymap
    "m" #'which-key-show-major-mode
    "t" #'which-key-show-top-level)
-  :init (which-key-mode)
   :config
-  (setq which-key-idle-delay 0.5)
-  (which-key-setup-side-window-right-bottom))
+  (which-key-setup-side-window-right-bottom)
+  (which-key-mode))
 
 
 
 ;;;; Project
+
+(defun v-project-mode-line ()
+  "Generate project mode line."
+  (let ((name (projectile-project-name)))
+    ;; 🧊 🧪 🌇 🚀 🍻 🧱 🦔 🎇 📚
+    (format " 📚 %s"
+            (if (< (length name) 7)
+                name
+              (format "%s.." (substring name 0 6))))))
+
 (use-package projectile
+  :defer 1
   :custom
   (projectile-completion-system 'ivy)
-  :general
-  (vision-map "p" projectile-command-map)
-  :init
-  (projectile-mode)
-  (setq projectile-mode-line-function
-        (lambda ()
-          (format " P:%s"
-                  (if (< (length projectile-project-name) 5)
-                      (projectile-project-name)
-                    (concat (substring projectile-project-name 0 4) "..")))))
+  (projectile-mode-line-function #'v-project-mode-line)
+  (projectile-project-root-functions
+   '(projectile-root-local
+     projectile-root-top-down
+     projectile-root-bottom-up
+     projectile-root-top-down-recurring))
   :config
+  (add-to-list 'projectile-project-root-files "go.mod")
+  (general-def vision-map "p" projectile-command-map)
   (projectile-mode))
 
 

@@ -17,11 +17,6 @@
      (message "gc-cons-threshold and file-name-handler-alist restored"))))
 
 
-;; The benchmark should be placed at the top of init.el so that it covers all init code.
-(when nil
-  (require 'benchmark-init)
-  (benchmark-init/activate)
-  (add-hook 'after-init-hook #'benchmark-init/deactivate))
 
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -30,6 +25,12 @@
 ;;;; Modules
 
 (require 'init-core)                    ; Must be loaded first
+
+;; The benchmark should be placed at the top of init.el so that it covers all init code.
+(use-package benchmark-init
+  :ensure t
+  :hook (after-init . #'benchmark-init/deactivate))
+
 (defvar v-ui-hook nil "Hook run when ui init.")
 (defvar v-editor-hook nil "Hook run when editor init.")
 (v-with-idle-timer 1
@@ -53,19 +54,6 @@
         dumb-jump flycheck lsp
         restclient
         elisp javascript org html xml yaml)
-
-
-(defvar v-init-golang nil "Golang config already inited.")
-
-(defun v-init-golang ()
-  "Init golang config."
-  (unless v-init-golang
-    (v-ensure-package 'v-golang)
-    (v-golang-config)
-    (setq v-init-golang t)))
-
-(v-init-register-ext 'go #'v-init-golang)
-
 
 (defun v-python ()
   "Load `v-python' package."
