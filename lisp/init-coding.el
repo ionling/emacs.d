@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 (require 'init-core)
+(require 'init-modules)
 
 
 (v-defun lang-find-definition
@@ -25,15 +26,57 @@
 (setq v-lang-find-apropos-func #'xref-find-apropos)
 
 
+(use-package editorconfig
+  :delight
+  :hook (after-init . editorconfig-mode))
+
+
+;;;; ElDoc
+(use-package eldoc :delight)
+
+(use-package eldoc-box
+  :delight eldoc-box-hover-at-point-mode
+  :hook (emacs-lisp-mode . eldoc-box-hover-at-point-mode))
+
+
+;;;; Format
+
 ;; Deprecated as of 20230805, use apheleia instead.
-(use-package format-all)
+(use-package format-all :disabled)
 (use-package apheleia
   :delight " Ap"
   :defer 1
   :config
   (setf (alist-get 'protobuf-mode apheleia-mode-alist) 'clang-format)
+  (push '(sql-formatter . ("npx sql-formatter")) apheleia-formatters)
   (apheleia-global-mode))
 
+
+;;;; Snippets
+(use-package yasnippet
+  :defer 2
+  :delight yas-minor-mode
+  :config
+  (yas-global-mode))
+
+(use-package yasnippet-snippets)
+
+(use-package ivy-yasnippet :if v-mod-ivy-enabled)
+
+
+(use-package hideshow
+  :delight hs-minor-mode
+  :hook
+  (prog-mode . hs-minor-mode))
+
+(use-package imenu-list
+  :general
+  (v-lang-map "i" #'imenu-list)
+  :custom
+  (imenu-list-auto-resize t))
+
+
+;;;; Modules
 
 (v-defmodule docker
   (use-package docker)
@@ -66,7 +109,7 @@
 
 
   (use-package flycheck-posframe
-    :unless use-lsp
+    :unless v-mod-lsp-enabled
     :hook (flycheck-mode . flycheck-posframe-mode)
     :custom
     (flycheck-posframe-position 'window-center)
@@ -126,6 +169,32 @@
       (add-to-list 'evil-normal-state-modes 'restclient-mode)))
 
   (use-package ob-restclient))
+
+
+(v-defmodule treemacs
+  (use-package treemacs
+    :general
+    (vision-file-map "t" #'treemacs))
+
+  (use-package lsp-treemacs :if v-mod-lsp-enabled)
+
+  (use-package treemacs-projectile))
+
+
+;;;; Disabled
+
+(use-package semantic
+  :disabled
+  :hook (prog-mode . semantic-mode)
+  :custom
+  (semantic-default-submodes
+   '(global-semantic-decoration-mode
+     global-semantic-highlight-edits-mode
+     global-semantic-highlight-func-mode
+     global-semantic-idle-breadcrumbs-mode
+     global-semantic-idle-scheduler-mode
+     global-semantic-mru-bookmark-mode
+     global-semanticdb-minor-mode)))
 
 
 (provide 'init-coding)

@@ -5,7 +5,13 @@
 (defvar v-mod-spell-checking-enabled nil)
 
 ;; TODO
-(defcustom v-mod-lsp-enabled nil
+(defcustom v-mod-ivy-enabled t
+  "Whether ivy is enabled or not."
+  :group 'v-mod
+  :type 'boolean)
+
+;; TODO
+(defcustom v-mod-lsp-enabled t
   "Whether LSP is enabled or not."
   :group 'v-mod
   :type 'boolean)

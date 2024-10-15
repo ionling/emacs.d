@@ -17,10 +17,8 @@
      (message "gc-cons-threshold and file-name-handler-alist restored"))))
 
 
-
-
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "core" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
 
 ;;;; Modules
 
@@ -47,13 +45,25 @@
 (require 'init-editor)
 (require 'init-ui)
 (require 'init-highlight)
-(require 'v-tests)
+(require 'init-drafts)
 
 
-(v-load doom-ui treemacs tabs
-        dumb-jump flycheck lsp
-        restclient
-        elisp javascript org html xml yaml)
+(v-load doom-ui
+        tabs
+        treemacs)
+
+(v-load dumb-jump
+        flycheck
+        hydra
+        lsp)
+
+(v-load elisp
+        javascript
+        html
+        plantuml
+        xml
+        yaml)
+
 
 (defun v-python ()
   "Load `v-python' package."
@@ -86,6 +96,8 @@
 (use-package v-org :v-ensure
   :defer 1
   :config (v-org-config))
+
+(use-package ime-frame :v-ensure)
 
 
 ;;;; Emacs
@@ -208,9 +220,7 @@ Refer https://emacs-china.org/t/topic/2808/24."
                 '(prog-mode text-mode org-mode conf-mode yaml-mode))))
 
 (use-package evil-surround
-  :defer 4
-  :config
-  (global-evil-surround-mode))
+  :hook (evil-mode . global-evil-surround-mode))
 
 
 ;;; init.el ends here

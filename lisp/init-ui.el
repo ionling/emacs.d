@@ -10,6 +10,24 @@
 (require 'init-core)
 
 
+;;;; Font
+(defun v-font-set (name size)
+  "Set font with NAME and SIZE."
+  (let ((font (format "%s %d" name size)))
+    (set-face-attribute 'default t :font font)
+    (set-frame-font font nil t)))
+
+(defun v-font-set-meslo ()
+  "Set font to MesloLGS."
+  (interactive)
+  (v-font-set "MesloLGS Nerd Font Mono" 12))
+
+(add-hook 'v-ui-hook
+          (lambda ()
+            (if (equal (system-name) "ion-gnome")
+                (v-font-set-meslo))))
+
+
 (defgroup v-theme nil
   "Vision theme."
   :group 'v-ui
@@ -56,7 +74,26 @@
 (advice-add 'v-theme-switch :after #'v-theme-store-file)
 
 
-(use-package all-the-icons)
+(use-package line-reminder
+  :hook (v-ui . global-line-reminder-mode)
+  :custom
+  (line-reminder-show-option 'indicators)
+  (line-reminder-thumbnail t))
+
+(use-package minibuffer-line
+  :defer 1
+  :custom
+  (minibuffer-line-refresh-interval 1)
+  (minibuffer-line-format
+   '("" (:eval system-name)
+     " | " (:eval (format-time-string "%F %T"))
+     " | " (:eval (if buffer-file-truename
+                      buffer-file-truename
+                    "no file name"))))
+  :config
+  (minibuffer-line-mode))
+
+(use-package all-the-icons :disabled)
 
 (use-package all-the-icons-ivy-rich
   :disabled

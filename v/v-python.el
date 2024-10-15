@@ -3,16 +3,19 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration
-;; Package-Requires: (python python-black pipenv py-isort lsp-mode lsp-python-ms)
+;; Version: 20241015
+;; Package-Requires: (python python-black pipenv py-isort lsp-mode)
 
 ;;; Commentary:
 
 ;;; Code:
 
-(require 'lsp-python-ms)
-(require 'py-isort)
-(require 'python-black)
 (require 'use-package)
+
+(require 'v-pkg)
+
+(v-require py-isort)
+(v-require python-black)
 
 
 ;;;###autoload
@@ -40,11 +43,11 @@
         :delight python-black-on-save-mode
         :hook (python-mode . python-black-on-save-mode))
 
-      (use-package lsp-python-ms
+      (use-package lsp-pyright
         :hook
         (python-mode
          . (lambda ()
-             (require 'lsp-python-ms)
+             (require 'lsp-pyright)
              (lsp-deferred)))))))
 
 

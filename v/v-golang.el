@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration golang
-;; Version: 20231105
+;; Version: 20241017
 ;; Package-Requires: (f go-mode golint gotest go-gen-test go-playground popwin
 ;;   projectile)
 
@@ -11,6 +11,7 @@
 
 ;;; Code:
 
+(require 'dash)
 (require 'f)
 (require 'go-mode)
 (require 'go-gen-test)
@@ -29,11 +30,21 @@
         :custom
         (gofmt-command "goimports")
         :hook
-        (outline-minor-mode . v-golang-outline-set-local))
+        (outline-minor-mode . v-golang-outline-set-local)
+        :init
+        (with-eval-after-load 'evil
+          (add-to-list 'evil-normal-state-modes 'go-dot-mod-mode)))
+
+      (use-package go-direx :disabled)
+
+      (use-package go-tag :disabled)
 
       (use-package golint :tags golang lint)
 
-      (use-package gotest :tags golang test)
+      (use-package gotest :tags golang test
+        :config
+        (setq-default go-test-args "-v")
+        (push 'go-test-mode popwin:special-display-config))
 
       ;; Generate test with gotests
       (use-package go-gen-test :tags golang test)
@@ -41,14 +52,20 @@
       (use-package go-playground))))
 
 
+;;;###autoload
+(defun v-go-mod-tidy ()
+  "Run \"go mod tidy\"."
+  (interactive)
+  (shell-command "go mod tidy"))
+
 (defun v-golang-playground-browse (paste)
   "Browse selected PASTE."
   (interactive
    (->> go-playground-basedir
-     f-directories
-     (-map (lambda (d) (f-base d)))
-     (completing-read "Paste: ")
-     list))
+        f-directories
+        (-map (lambda (d) (f-base d)))
+        (completing-read "Paste: ")
+        list))
 
   (find-file (f-join go-playground-basedir paste "snippet.go")))
 
@@ -57,9 +74,9 @@
   "Show go playground pastes count."
   (interactive)
   (->> go-playground-basedir
-    f-directories
-    length
-    (message "Total %s pastes")))
+       f-directories
+       length
+       (message "Total %s pastes")))
 
 
 (defun v-golang-swag-init ()

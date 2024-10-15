@@ -3,9 +3,13 @@
 ;;; Code:
 (require 'use-package)
 
+(require 'init-core)
+
 
 (defvar v-git-map (make-sparse-keymap)
   "Git keymap.")
+
+(general-def vision-map "g" v-git-map)
 
 
 (use-package git-modes)

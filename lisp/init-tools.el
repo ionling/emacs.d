@@ -37,6 +37,14 @@
    ("C-h y" . helpful-at-point)))
 
 
+;;;; Link
+
+(use-package link-hint
+  :general
+  (v-point-map "c" #'link-hint-copy-link
+               "o" #'link-hint-open-link))
+
+
 (use-package wakatime-mode
   :if (or (executable-find "wakatime-cli")
           (and (warn "wakatime cli not found") nil))
@@ -57,6 +65,19 @@
           (t (youdao-dictionary-search-at-point+))))
   :general
   (v-point-map "y" #'v-youdao-dict-search-at-point))
+
+(use-package go-translate
+  :custom
+  (gt-langs '(en zh))
+  :general
+  (v-point-map "t" #'gt-do-translate)
+  :config
+  (setq gt-default-translator
+        (gt-translator
+         :taker   (gt-taker :text 'word)
+         :engines (list (gt-youdao-dict-engine))
+         ;; :engines (list (gt-youdao-dict-engine) (gt-bing-engine) (gt-google-engine))
+         :render (gt-buffer-render))))
 
 
 (use-package paradox

@@ -17,6 +17,11 @@
 (set-default 'fill-column 100)
 (setq column-number-indicator-zero-based nil)
 (setq make-backup-files nil)
+(setq selection-coding-system 'utf-8)
+
+(if (eq window-system 'mac)
+    (setq mac-option-modifier 'meta
+          mac-command-modifier nil))
 
 
 (defun v-default-editor ()
