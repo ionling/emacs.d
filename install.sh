@@ -10,10 +10,16 @@ command -v realpath > /dev/null || {
 
 mkdir -p ~/.emacs.d
 
-files=(init.el better-prog-theme.el core lisp site-lisp v modules)
-
+files=(
+    init.el
+    better-prog-theme.el
+    lisp
+    site-lisp
+    v
+    snippets
+)
 for f in ${files[@]}; do
     if test $(realpath $f) != $(realpath ~/.emacs.d/$f); then
-        ln -si `realpath $f` ~/.emacs.d/
+        ln -si `realpath $f` ~/.emacs.d
     fi
 done

@@ -1,10 +1,12 @@
 ;;; v-pkg.el --- Vision package management -*- lexical-binding: t; -*-
-;; Version: 20241014
+;; Version: 20241017
 ;;; Commentary:
 ;;; Code:
 
 (require 'package)
 (require 'use-package)
+
+(require 'dash)
 
 (require 'init-core)
 
@@ -65,7 +67,29 @@
 
 (defalias 'v-ensure-package #'v-pkg-ensure)
 
-;;;;; use-package keyword
+
+;;;; Keywords
+
+;;;;; doc
+
+(add-to-list 'use-package-keywords :doc)
+
+(defvar v-pkg-docs nil "All docs of `:doc' keyword.")
+
+(defun use-package-normalize/:doc (_name _keyword args)
+  "Normalize `:doc' ARGS."
+  (car args))
+
+(defun use-package-handler/:doc (name _keyword doc rest state)
+  "Store DOC for NAME package.
+see `use-package-process-keywords' for REST and STATE."
+  (let ((body (use-package-process-keywords name rest state)))
+    (use-package-concat
+     body
+     `((setq v-pkg-docs (plist-put v-pkg-docs ',name ,doc))))))
+
+;;;;; v-ensure
+
 (defun use-package-normalize/:v-ensure (_name _keyword args)
   "Normalize `:v-ensure' ARGS."
   args)
@@ -78,7 +102,36 @@ see `use-package-process-keywords' for REST and STATE."
 
 (push-after :v-ensure :disabled 'use-package-keywords)
 
-;;;;;; tags
+;;;;; module
+
+(add-to-list 'use-package-keywords :module)
+
+(defun use-package-normalize/:module (_name _keyword args)
+  "Normalize function of `use-package' module keyword.
+ARGS is arguments passed to this keyword."
+  (car args))
+
+(defun use-package-handler/:module (name _keyword module rest state)
+  "Handle MODULE keyword for NAME package.
+see `use-package-process-keywords' for REST and STATE."
+  (add-to-list 'v-modules module)
+  (let ((body (use-package-process-keywords name rest state))
+        (func (intern (format "v-mod-%s-load-%s" module name)))
+        (var (intern (format "v-mod-%s-load-funcs" module)))
+        (mod-var (intern (format "v-mod-group-%s" module))))
+    `((defvar ,var nil
+        ,(format "Load funcs of `%s'." mod-var))
+      (defvar ,mod-var nil
+        ,(format "The packages of `%s'." mod-var))
+      (defun ,func ()
+        ,(format "Load the `%s' package for `%s'." name mod-var)
+        (interactive)
+        ,@body)
+      (add-to-list ',var #',func)
+      (add-to-list ',mod-var ',name))))
+
+;;;;; tags
+
 (add-to-list 'use-package-keywords :tags)
 
 (defvar v-pkg-tags nil "All package tags.")
@@ -102,6 +155,27 @@ see `use-package-process-keywords' for REST and STATE."
                   (add-to-list ',tag-var ',name )
                   (add-to-list 'v-pkg-tags ',tag))))
             args))))
+
+;;;; Advices
+
+(defvar v-pkg-all '(use-package))
+
+(defun v-pkg-use-package-after-advice (name &rest _args)
+  "Advice for `use-package' macro, Add NAME to `v-pkg--all-packages'."
+  (push name v-pkg-all))
+
+(advice-add 'use-package :after #'v-pkg-use-package-after-advice)
+
+;;;###autoload
+(defun v-pkg-report ()
+  "Show all packages."
+  (interactive)
+  (let ((buffer (get-buffer-create "*v packages*")))
+    (with-current-buffer buffer
+      (dolist (pkg (reverse v-pkg-all))
+        (insert (format "- %s\n" pkg))))
+    (switch-to-buffer buffer)))
+
 
 (provide 'v-pkg)
 

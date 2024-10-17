@@ -19,5 +19,15 @@
 
   ;; Not working with TMUX and Alacritty
   (use-package clipetty :disabled))
+
+(defun v-company-space ()
+  "Call `company-abort' and insert a space."
+  (interactive)
+  (company-abort)
+  (insert " "))
+
+(when nil
+  (with-eval-after-load 'company
+    (general-def company-active-map "SPC" #'v-company-space)))
 (provide 'init-drafts)
 ;;; init-drafts.el ends here

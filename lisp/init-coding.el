@@ -1,6 +1,8 @@
 ;;; init-coding.el --- Coding stuff
 ;;; Commentary:
 ;;; Code:
+(require 'dash)
+
 (require 'init-core)
 (require 'init-modules)
 
@@ -94,7 +96,7 @@
 
 (v-defmodule flycheck
   (use-package flycheck
-    :defer 4
+    :defer 1
     :custom
     (flycheck-emacs-lisp-load-path 'inherit)
     :general
@@ -127,6 +129,12 @@
 
 
 (v-defmodule lsp
+  (defun v-lsp-workspace-remove-all ()
+    "Remove all lsp workspaces."
+    (interactive)
+    (--each (lsp-session-folders (lsp-session))
+      (lsp-workspace-folders-remove it)))
+
   (use-package lsp-ivy)
 
   (use-package lsp-ui

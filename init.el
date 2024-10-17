@@ -4,6 +4,8 @@
 
 ;; 霞鹜文楷真好看, 写代码的心情更愉悦了.
 
+;; - `v-pkg-docs'
+
 ;; Speedup startup
 (let ((fnha-original file-name-handler-alist))
   (setq gc-cons-threshold most-positive-fixnum)

@@ -1,1 +1,7 @@
 My personal Emacs config based on =use-package=, =evil= and =counsel=.
+
+* Structure
+
+- lisp: Require based config, dont neet autoload
+- site-lisp: Third party lisp code
+- v: Package based config

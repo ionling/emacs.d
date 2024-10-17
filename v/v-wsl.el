@@ -24,10 +24,9 @@
 
 ;;;; Config
 (defvar v-wsl-config
-  '((with-eval-after-load 'browse-url
-      (setq browse-url-generic-program "cmd.exe"
-            browse-url-generic-args '("/c" "start")
-            browse-url-browser-function 'browse-url-generic))))
+  '((setq browse-url-generic-program "cmd.exe"
+          browse-url-generic-args '("/c" "start")
+          browse-url-browser-function 'browse-url-generic)))
 
 ;;;###autoload
 (defun v-wsl-config ()

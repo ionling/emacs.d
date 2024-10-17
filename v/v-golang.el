@@ -3,9 +3,9 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration golang
-;; Version: 20241017
-;; Package-Requires: (f go-mode golint gotest go-gen-test go-playground popwin
-;;   projectile)
+;; Version: 20241018
+;; Package-Requires: (go-mode golint gotest go-gen-test go-playground
+;;   f dash lsp popwin projectile)
 
 ;;; Commentary:
 
@@ -16,6 +16,7 @@
 (require 'go-mode)
 (require 'go-gen-test)
 (require 'go-playground)
+(require 'lsp)
 (require 'popwin)
 (require 'projectile)
 
@@ -53,11 +54,12 @@
 
 
 ;;;###autoload
-(defun v-go-mod-tidy ()
+(defun v-golang-mod-tidy ()
   "Run \"go mod tidy\"."
   (interactive)
   (shell-command "go mod tidy"))
 
+;;;###autoload
 (defun v-golang-playground-browse (paste)
   "Browse selected PASTE."
   (interactive
@@ -69,7 +71,7 @@
 
   (find-file (f-join go-playground-basedir paste "snippet.go")))
 
-
+;;;###autoload
 (defun v-golang-playground-count ()
   "Show go playground pastes count."
   (interactive)
@@ -78,6 +80,14 @@
        length
        (message "Total %s pastes")))
 
+;;;###autoload
+(defun v-golang-playground-remove-lsp-workspaces ()
+  "Remove lsp workspaces of `go-playground'."
+  (interactive)
+  (--each
+      (--filter (s-prefix? (f-full "~/go/src/playground") it)
+                (lsp-session-folders (lsp-session)))
+    (lsp-workspace-folders-remove it)))
 
 (defun v-golang-swag-init ()
   "Call `swag init` in project root."

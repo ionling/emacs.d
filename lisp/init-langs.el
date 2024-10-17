@@ -7,6 +7,7 @@
 
 (defvar v-lang-map (make-sparse-keymap))
 
+(general-def vision-map "l" v-lang-map)
 (general-def v-lang-map
   "d" #'v-lang-find-definition
   "r" #'v-lang-find-references
@@ -78,6 +79,7 @@
 (use-package fsharp-mode :module fsharp)
 (use-package haskell-mode :module haskell)
 (use-package racket-mode :module racket)
+(use-package graphviz-dot-mode :module graphviz)
 
 (v-defmodule ruby
   (use-package enh-ruby-mode)

@@ -52,6 +52,7 @@
   :defer 1
   :config (global-wakatime-mode))
 
+;;;; English
 
 (use-package youdao-dictionary
   :init
@@ -79,18 +80,27 @@
          ;; :engines (list (gt-youdao-dict-engine) (gt-bing-engine) (gt-google-engine))
          :render (gt-buffer-render))))
 
+(use-package wordreference
+  :custom
+  (wordreference-source-lang "zh"))
+
+
+;;;; Misc
 
 (use-package paradox
   :defer 2
   :config
   (paradox-enable))
 
-
-(use-package undo-tree
-  :delight
-  :defer 0.5
+(use-package print-debug :v-ensure
   :config
-  (global-undo-tree-mode))
+  ;; REF https://emacs.stackexchange.com/a/3415
+  (setcdr (assq 'go print-debug-ext-template) "fmt.Println(\"+++ %S\", )"))
+
+(use-package restart-emacs)
+
+(use-package try)
+
 
 (use-package flyspell
   :delight " Fs"

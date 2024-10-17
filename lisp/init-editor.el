@@ -81,6 +81,20 @@
 (use-package ibuffer :ensure nil
   :bind ("C-x C-b" . ibuffer))
 
+(use-package bufler)
+
+
+;;;; Clipboard
+
+(use-package browse-kill-ring)
+
+(use-package xclip
+  :hook (v-editor . xclip-mode))
+
+(use-package undo-tree
+  :delight
+  :hook (v-editor . global-undo-tree-mode))
+
 
 ;;;; Comment
 (use-package comment-dwim-2
@@ -182,6 +196,18 @@
    "s" #'thing-copy-symbol
    "u" #'thing-copy-url
    "w" #'thing-copy-word))
+
+
+;;;; Window
+
+(use-package popwin
+  :hook (v-editor . popwin-mode)
+  :config
+  (delete 'help-mode popwin:special-display-config))
+
+(use-package winner :ensure nil
+  :doc "Restore old window configurations"
+  :hook (v-editor . winner-mode))
 
 
 ;;;; Whitespace

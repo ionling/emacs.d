@@ -81,11 +81,11 @@ Supported keyword ARGS:
        (defun ,symbol ()
          ,(format "Initialize %s module." module)
          (unless ,symbol
-           (v-ensure-package ,(intern (format "v-%s" module)))
+           (v-ensure-package ',(intern (format "v-%s" module)))
            (funcall #',(intern (format "v-%s-config" module)))
            (setq ,symbol t)))
        (with-eval-after-load ',package
-         (advice-add ',module-mode :before #',symbol)))))
+         (advice-add #',module-mode :before #',symbol)))))
 
 
 (defvar v-init-by-file-ext nil "Plist of file extension to init function.")
@@ -206,6 +206,7 @@ Keywords:
 (setq use-package-always-defer t
       use-package-always-ensure t)
 
+(use-package dash)
 
 (use-package quelpa
   :disabled                             ; 2022-09-04 May slow Emacs startup
@@ -220,34 +221,28 @@ Keywords:
 
 (use-package delight)
 
-;;;;; use-package extensions
-
-(push :doc use-package-keywords)
-
-(defvar v-package-docs nil "The docs of `:doc' keyword.")
-
-(defun use-package-normalize/:doc (_name _keyword args)
-  "Normalize ARGS for `:doc' keyword."
-  (car args))
-
-(defun use-package-handler/:doc (name _keyword doc rest state)
-  "Handler for `:doc' keyword."
-  (let ((body (use-package-process-keywords name rest state)))
-    (use-package-concat
-     body
-     `((setq v-package-docs (plist-put v-package-docs ',name ,doc))))))
-
 
 ;;;; Key binding
+
+(use-package general)
+(require 'general)
+
 (defvar vision-map (make-sparse-keymap)
   "Personal keymap.")
 
 (defvar v-point-map (make-sparse-keymap))
 
-(use-package general :demand)
-
+(general-define-key :states 'motion "SPC" vision-map)
+(general-def "C-c" vision-map)
 (general-def vision-map "t" v-point-map)
 
+;; (general-define-key :keymaps 'which-key-mode-map "i" nil)
+
+(use-package use-package-chords
+  :disabled
+  :demand t
+  :init
+  (key-chord-mode 1))
 
 (use-package which-key
   :delight

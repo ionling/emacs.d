@@ -3,7 +3,7 @@
 ;; Author: Vision Ling
 ;; Homepage: https://github.com/ionling/emacs.d
 ;; Keywords: configuration org-mode
-;; Version: 20240716
+;; Version: 20241017
 ;; Package-Requires: (org org-cliplink dash f s counsel)
 
 ;;; Commentary:
@@ -69,6 +69,14 @@
            (python . t)
            (shell . t))))
 
+      (use-package org-capture :ensure nil
+        :custom
+        (org-capture-templates
+         '(("i" "Inbox" entry (file "~/org/in.org")
+            "* %U %^{Heading}\n%?" :prepend t)
+           ("n" "Notes" entry (file "~/org/x.org")
+            "* %^{heading}%?\n" :prepend t))))
+
       (use-package org-id :ensure nil
         :custom
         (org-id-link-to-org-use-id t))
@@ -82,9 +90,17 @@
         :custom
         (org-src-window-setup 'other-window))
 
+
+      (use-package ox-hugo
+        :custom
+        (org-hugo-auto-set-lastmod t))
+
       (use-package org-cliplink
         :general
         (v-org-map "l" #'org-cliplink))
+
+      (use-package org-mind-map
+        :init (require 'ox-org))
 
       (use-package org-super-agenda
         :hook (org-mode . org-super-agenda-mode)
@@ -421,6 +437,11 @@ If REV the insert order will be reversed."
     (-> (format "[[%s][%s]]" link title)
         (insert))))
 
+;;;###autoload
+(defun v-org-counsel-fzf ()
+  "Open a file in `org-directory' using the `counsel-fzf'."
+  (interactive)
+  (counsel-fzf nil org-directory))
 
 (provide 'v-org)
 ;;; v-org.el ends here
