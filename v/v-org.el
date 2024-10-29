@@ -25,6 +25,9 @@
   (interactive)
   (eval
    '(progn
+      (use-package valign
+        :if (display-graphic-p))
+
       (use-package org
         :custom
         (org-archive-location "~/org/datetree.org::datetree/")
@@ -33,7 +36,7 @@
         (org-log-done 'time)
         (org-modules '(ol-info org-id))
         (org-startup-indented t)
-        (org-hide-block-startup t)
+        (org-hide-block-startup nil)
         :general
         (vision-map
          :prefix "o"
@@ -46,7 +49,8 @@
          "b" #'v-org-subtree-indirect-buffer)
         :config
         (setq org-plantuml-jar-path (expand-file-name "plantuml.1.2019.12.jar" org-directory)
-              org-agenda-files `(,(expand-file-name "agenda" org-directory))
+              org-agenda-files `(,(expand-file-name "agenda" org-directory)
+                                 ,(expand-file-name "todo.org" org-directory))
               org-clock-in-switch-to-state "DOING"
               org-clock-rounding-minutes 5
               org-clock-sound t
@@ -90,6 +94,12 @@
         :custom
         (org-src-window-setup 'other-window))
 
+      (use-package ob-go
+        :after org
+        :init
+        (add-to-list 'org-babel-load-languages '(go . t))
+        (org-babel-do-load-languages
+         'org-babel-load-languages org-babel-load-languages))
 
       (use-package ox-hugo
         :custom
@@ -101,6 +111,9 @@
 
       (use-package org-mind-map
         :init (require 'ox-org))
+
+      (use-package org-tanglesync
+        :disabled)
 
       (use-package org-super-agenda
         :hook (org-mode . org-super-agenda-mode)
@@ -125,15 +138,26 @@
       (kill-buffer rand))))
 
 
+;;;; Babel
+
 ;;;###autoload
-(defun org-babel-tangle-tmp ()
+(defun v-org-babel-load-lang ()
+  "Load lang of current source block."
+  (interactive)
+  (if-let ((info (org-babel-get-src-block-info))
+           (lang (car info)))
+      (require (intern (concat "ob-" lang)))
+    (user-error "No src block here")))
+
+;;;###autoload
+(defun v-org-babel-tangle-tmp ()
   "Tangle the block at point to tmp file."
   (interactive)
   (org-babel-tangle 4))
 
 
 ;;;###autoload
-(defun org-babel-tangle-tmp2 ()
+(defun v-org-babel-tangle-tmp2 ()
   (interactive)
   (let* ((info (org-babel-get-src-block-info))
          (lang (car info))
@@ -157,11 +181,17 @@
 
 ;;;###autoload
 (defun v-org-goto ()
-  "Goto org heading."
+  "Goto an org heading."
   (interactive)
   (ivy-read "Go " (cl-concatenate 'list (v-org-outline))
             :action #'v-org-goto-action))
 
+;;;###autoload
+(defun v-org-goto-indirect ()
+  "Goto an org heading in an indirect buffer."
+  (interactive)
+  (ivy-read "Go " (cl-concatenate 'list (v-org-outline))
+            :action #'v-org-goto-indirect-action))
 
 ;;;###autoload
 (defun v-org-goto-other-window ()
@@ -187,6 +217,12 @@
     (goto-char (point-min))
     (forward-line (1- line))))
 
+(defun v-org-goto-indirect-action (x)
+  "Goto Org header defined in X."
+  (let ((info (cdr x)))
+    (v-org-goto-action x)
+    (message "v org goto %s" info)      ; Magic line
+    (v-org-subtree-indirect-buffer)))
 
 (defun v-org-outline (&rest paths)
   "Get all headings of all org files in the PATHS.
@@ -248,6 +284,7 @@ If CONVERT is not nil, use it to transform the popped value."
          (setq v (funcall ,convert v)))
      (setq ,plist (plist-put ,plist ,property v))))
 
+;; OPTI Benchmark it, or speed it up by compile regexp
 (defun v-org-outline-parse-rg (line)
   "Parse a ripgrep LINE.
 e.g.: './a.org:202:*** video 4'"

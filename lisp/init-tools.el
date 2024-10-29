@@ -3,6 +3,7 @@
 ;;; Code:
 (require 'use-package)
 
+(require 'init-core)
 (require 'init-modules)
 
 
@@ -125,7 +126,7 @@
     (hydra-posframe-border-width 2)
     :custom-face
     (hydra-posframe-border-face ((t (:background "dark grey"))))
-    :config 
+    :config
     (hydra-posframe-enable))
 
 

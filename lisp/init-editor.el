@@ -2,7 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 (require 's)
-(require 'outline)
 
 (require 'init-core)
 
@@ -93,6 +92,8 @@
 
 (use-package undo-tree
   :delight
+  :custom
+  (undo-tree-auto-save-history nil)
   :hook (v-editor . global-undo-tree-mode))
 
 
@@ -146,7 +147,8 @@
 
 ;;;; Multiple
 (use-package iedit
-  :bind ("C-;" . iedit-mode))
+  :general
+  (v-point-map "e" #'iedit-mode))
 
 
 ;;;; Outline
@@ -212,8 +214,26 @@
 
 
 ;;;; Whitespace
+(use-package whitespace :ensure nil
+  :delight global-whitespace-mode
+  :custom
+  (whitespace-line-column 100)
+  (whitespace-style
+   '(face trailing tabs lines-tail newline empty space-before-tab space-after-tab))
+  :init
+  (defun v-whitespace-org-mode-local-style ()
+    (setq-local whitespace-style
+                (remove 'lines-tail whitespace-style)))
+  :hook
+  (org-mode . v-whitespace-org-mode-local-style)
+  (v-editor . global-whitespace-mode))
+
+;; (setq-default show-trailing-whitespace t)
+
+
 (use-package ws-butler
   :delight
+  :doc "Unobtrusively remove trailing whitespace"
   :hook (v-editor . ws-butler-global-mode))
 
 
@@ -233,8 +253,7 @@ Refer https://stackoverflow.com/a/23588908/7134763."
   :doc
   "Enlarge the selected window"
   :custom
-  (golden-ratio-adjust-factor 0.9)
-  :hook (v-editor . golden-ratio-mode))
+  (golden-ratio-adjust-factor 0.9))
 
 
 (use-package mwim

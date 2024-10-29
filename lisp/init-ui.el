@@ -17,6 +17,15 @@
     (set-face-attribute 'default t :font font)
     (set-frame-font font nil t)))
 
+(defun v-font-find-by-name (name)
+  "Find font by NAME."
+  (find-font (font-spec :name name)))
+
+;; JetBrains Mono
+;; JetBrainsMono Nerd Font
+;; Cascadia Code
+;; 霞鹜文楷等宽
+
 (defun v-font-set-meslo ()
   "Set font to MesloLGS."
   (interactive)
@@ -75,7 +84,8 @@
 
 
 (use-package line-reminder
-  :hook (v-ui . global-line-reminder-mode)
+  :if window-system
+  :hook (prog-mode . line-reminder-mode)
   :custom
   (line-reminder-show-option 'indicators)
   (line-reminder-thumbnail t))
@@ -108,6 +118,7 @@
   (setq pangu-spacing-real-insert-separtor t))
 
 (use-package sideline
+  :if window-system
   :delight
   :custom
   (sideline-display-backend-name t)
