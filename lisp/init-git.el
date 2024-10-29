@@ -12,7 +12,8 @@
 (general-def vision-map "g" v-git-map)
 
 
-(use-package git-modes)
+(use-package git-modes
+  :exec git)
 
 
 (use-package git-messenger

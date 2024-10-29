@@ -88,6 +88,45 @@ see `use-package-process-keywords' for REST and STATE."
      body
      `((setq v-pkg-docs (plist-put v-pkg-docs ',name ,doc))))))
 
+;;;;; exec
+
+(push-after :exec :pin 'use-package-keywords)
+
+(defvar v-pkg-exec-plist nil "Package related executables.")
+
+(defun use-package-normalize/:exec (_name _keyword args)
+  "Normalize `:exec' ARGS."
+  (car args))
+
+;; The `executable-find' may slow down startup,
+;; so we are better to store them in a list.
+
+(defun use-package-handler/:exec (name _keyword exec rest state)
+  "Store EXEC for NAME package.
+see `use-package-process-keywords' for REST and STATE."
+  (let ((body (use-package-process-keywords name rest state)))
+    (use-package-concat
+     body
+     `((setq v-pkg-exec-plist (plist-put v-pkg-exec-plist ',name ',exec))))))
+
+(defun v-pkg-exec-check ()
+  "Check executables of all package."
+  (interactive)
+  (let ((buffer (get-buffer-create "*v exec check*")))
+    (with-current-buffer buffer
+      (erase-buffer)
+      (cl-loop for (name execs) on v-pkg-exec-plist by #'cddr
+               do
+               (unless (listp execs)
+                 (setq execs (list execs)))
+               (insert "* Not found executables")
+               (insert " " (format-time-string "%Y-%m-%d %H:%M:%S\n"))
+               (dolist (exec execs)
+                 (unless (executable-find (symbol-name exec))
+                   (insert (format "- %s > %s\n" name exec))))))
+    (switch-to-buffer-other-window buffer)
+    (org-mode)))
+
 ;;;;; v-ensure
 
 (defun use-package-normalize/:v-ensure (_name _keyword args)

@@ -182,6 +182,7 @@
 ;;;; Search
 (use-package deadgrep
   :tags search
+  :exec rg
   :bind
   (:map v-point-map
         ("g" . deadgrep)))              ; Grep

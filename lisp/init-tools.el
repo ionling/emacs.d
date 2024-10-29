@@ -46,6 +46,7 @@
 
 
 (use-package wakatime-mode
+  :exec wakatime
   :if (or (executable-find "wakatime-cli")
           (and (warn "wakatime cli not found") nil))
   :delight
