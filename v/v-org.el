@@ -81,6 +81,8 @@
            ("n" "Notes" entry (file "~/org/x.org")
             "* %^{heading}%?\n" :prepend t))))
 
+      (use-package org-contrib)
+
       (use-package org-id :ensure nil
         :custom
         (org-id-link-to-org-use-id t))
@@ -101,6 +103,8 @@
         (org-babel-do-load-languages
          'org-babel-load-languages org-babel-load-languages))
 
+      (use-package ox-gfm)
+
       (use-package ox-hugo
         :custom
         (org-hugo-auto-set-lastmod t))
@@ -114,6 +118,14 @@
 
       (use-package org-tanglesync
         :disabled)
+
+      (use-package org-visual-outline :ensure nil
+        :disabled
+        :quelpa (org-visual-outline :fetcher github :repo "legalnonsense/org-visual-outline"))
+
+      (use-package org-super-links :ensure nil
+        :disabled
+        :quelpa (org-super-links :fetcher github :repo "toshism/org-super-links"))
 
       (use-package org-super-agenda
         :hook (org-mode . org-super-agenda-mode)

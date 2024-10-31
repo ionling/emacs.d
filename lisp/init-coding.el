@@ -23,9 +23,13 @@
          "Execute code action.")
 
 
-(setq v-lang-find-references-func #'xref-find-references)
-(setq v-lang-find-definition-func #'xref-find-definitions)
-(setq v-lang-find-apropos-func #'xref-find-apropos)
+(use-package xref
+  :custom
+  (xref-prompt-for-identifier nil)
+  :init
+  (setq v-lang-find-references-func #'xref-find-references)
+  (setq v-lang-find-definition-func #'xref-find-definitions)
+  (setq v-lang-find-apropos-func #'xref-find-apropos))
 
 
 (use-package editorconfig
@@ -65,6 +69,7 @@
 
 (use-package ivy-yasnippet :if v-mod-ivy-enabled)
 
+;;;; Misc
 
 (use-package hideshow
   :delight hs-minor-mode
@@ -76,6 +81,8 @@
   (v-lang-map "i" #'imenu-list)
   :custom
   (imenu-list-auto-resize t))
+
+(use-package import-popwin)
 
 
 ;;;; Modules
@@ -149,6 +156,12 @@
     :init
     (add-to-list 'sideline-backends-right #'sideline-lsp))
 
+  (defun v-coding-set-actions ()
+    "Change coding actions to LSP."
+    (setq-local v-lang-format-func #'lsp-format-buffer)
+    (setq-local v-lang-rename-func #'lsp-rename)
+    (setq-local v-lang-execute-code-action-func #'lsp-execute-code-action))
+
   (use-package lsp-mode
     :delight
     :custom
@@ -161,7 +174,8 @@
       js-mode
       nim-mode
       ruby-mode)
-     . lsp-deferred)
+     . lsp-deferred
+     (lsp-mode . #'v-coding-set-actions))
     :config
     ;; Increase the amount of data which Emacs reads from the process.
     ;; Again the emacs default is too low 4k considering that

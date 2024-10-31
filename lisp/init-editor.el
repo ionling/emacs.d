@@ -200,20 +200,91 @@
    "u" #'thing-copy-url
    "w" #'thing-copy-word))
 
+(defun v-thing-forward-string (&optional arg)
+  "Move forward to ARGth string."
+  (setq arg (or arg 1))
+  (if (not (bobp))
+      (save-match-data
+        (when (or (and (looking-at-p "\\s-*\"")
+                       (not (looking-back "\\\\")))
+                  (re-search-backward "[^\\\\]\"" nil nil))
+          (looking-at "\\s-*\"")
+          (goto-char (match-end 0))
+          (forward-char -1))))
+  (while (and (> arg 0)
+              (not (eobp))
+              (looking-at-p "\\s-*\""))
+    (forward-sexp 1)
+    (setq arg (1- arg)))
+  (while (and (< arg 0)
+              (not (bobp))
+              (looking-at-p "\""))
+    (forward-sexp -1)
+    (setq arg (1+ arg)))
+  (ignore))
+
+;; Tell the thingatpt.el library about it.
+(put 'string 'forward-op 'v-thing-forward-string)
+
+;; REF https://www.emacswiki.org/emacs/StringAtPoint
+
+(defun v-thing-kill-string (&optional arg)
+  "Kill ARG strings under point."
+  (interactive "*p")
+  (setq arg (or (and (not (zerop arg)) arg) 1))
+  (if (> arg 0)
+      (copy-region-as-kill
+       (progn (forward-thing 'string 0) (point))
+       (progn (forward-thing 'string arg) (point)))
+    (copy-region-as-kill
+     (progn (forward-thing 'string 1) (point))
+     (progn (forward-thing 'string arg) (point)))))
+
+;; REF https://www.emacswiki.org/emacs/IncrementNumber
+
+(defun v-thing-increment-number ()
+  "Increment the number at point."
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+
 
 ;;;; Window
+
+(defvar v-window-map (make-sparse-keymap))
 
 (use-package popwin
   :hook (v-editor . popwin-mode)
   :config
   (delete 'help-mode popwin:special-display-config))
 
+(use-package transpose-frame)
+
 (use-package winner :ensure nil
   :doc "Restore old window configurations"
   :hook (v-editor . winner-mode))
 
+(use-package golden-ratio
+  :delight " GR"
+  :doc
+  "Enlarge the selected window"
+  :custom
+  (golden-ratio-adjust-factor 0.9))
+
+(defalias #'v-window-golden #'golden-ratio)
+
+(defun v-window-golden-right ()
+  "Split window to right with golden ratio."
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1)
+  (golden-ratio t))
+
 
 ;;;; Whitespace
+
 (use-package whitespace :ensure nil
   :delight global-whitespace-mode
   :custom
@@ -247,13 +318,6 @@ Refer https://stackoverflow.com/a/23588908/7134763."
   (goto-char end)
   (yank)
   (comment-region beg end arg))
-
-(use-package golden-ratio
-  :delight " GR"
-  :doc
-  "Enlarge the selected window"
-  :custom
-  (golden-ratio-adjust-factor 0.9))
 
 
 (use-package mwim

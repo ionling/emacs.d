@@ -38,6 +38,8 @@
 
 
 (v-defmodule elisp
+  (use-package macrostep)
+
   (use-package nameless
     :delight
     :hook (emacs-lisp-mode . nameless-mode)))
@@ -78,7 +80,12 @@
 
 (use-package fsharp-mode :module fsharp)
 (use-package haskell-mode :module haskell)
+(use-package nim-mode :module nim
+  :init
+  (with-eval-after-load 'aggressive-indent
+    (add-to-list 'aggressive-indent-excluded-modes 'nim-mode)))
 (use-package racket-mode :module racket)
+(use-package sqlup-mode :module sql)
 (use-package graphviz-dot-mode :module graphviz)
 
 (v-defmodule ruby

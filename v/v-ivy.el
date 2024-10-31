@@ -51,6 +51,10 @@
       (ivy-rich-parse-remote-buffer nil "Parsing remote is tool slow")
       :hook (ivy-mode . ivy-rich-mode))
 
+    (use-package ivy-xref
+      :custom
+      (xref-show-xrefs-function 'ivy-xref-show-xrefs))
+
     (use-package ivy
       :delight
       :custom

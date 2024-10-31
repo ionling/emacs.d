@@ -134,6 +134,11 @@
 
 
 (v-defmodule doom-ui
+  (defun v-mode-line-toggle-encoding ()
+    "Toggle the buffer encoding display."
+    (interactive)
+    (setq doom-modeline-buffer-encoding (not doom-modeline-buffer-encoding)))
+
   (use-package doom-themes
     :config
     (doom-themes-visual-bell-config)

@@ -221,6 +221,9 @@ Refer https://emacs-china.org/t/topic/2808/24."
         (-union evil-normal-state-modes
                 '(prog-mode text-mode org-mode conf-mode yaml-mode))))
 
+(use-package evil-escape
+  :hook evil-mode)
+
 (use-package evil-surround
   :hook (evil-mode . global-evil-surround-mode))
 

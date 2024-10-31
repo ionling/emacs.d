@@ -82,6 +82,8 @@
          ;; :engines (list (gt-youdao-dict-engine) (gt-bing-engine) (gt-google-engine))
          :render (gt-buffer-render))))
 
+(use-package reverso)
+
 (use-package wordreference
   :custom
   (wordreference-source-lang "zh"))

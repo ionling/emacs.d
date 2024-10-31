@@ -89,6 +89,20 @@
   (v-with-idle-timer 1
     (run-hooks 'v-complete-v2-hook)))
 
+
+;;;; Comments
+
+;; (use-package graph :ensure nil
+;;   :quelpa (graph :fetcher github :repo storax/graph.el))
+;; (use-package litable)
+;; (use-package dired-sidebar)
+;;     symbols-outline
+;;     do-at-point
+;;     async-status
+;;     expreg
+;;     subword-mode
+
+
 ;;;; Disabled
 
 (use-package dtrt-indent :disabled)
