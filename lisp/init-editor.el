@@ -135,6 +135,9 @@
   :disabled                             ; In favor of semantic linefeeds
   :hook (org-mode . aggressive-fill-paragraph-mode))
 
+;;;; Frame
+
+(use-package ime-frame :v-ensure)
 
 ;;;; Indent
 (set-default 'indent-tabs-mode nil)
@@ -144,6 +147,13 @@
 
 (use-package indent-bars
   :hook ((python-base-mode go-mode) . indent-bars-mode))
+
+;;;; Keyboard
+(use-package keyfreq
+  :defer 1
+  :config
+  (keyfreq-mode)
+  (keyfreq-autosave-mode))
 
 ;;;; Multiple
 (use-package iedit
@@ -250,6 +260,56 @@
       (error "No number at point"))
   (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
+(defun is-lower (char)
+  "Check whether the CHAR is lowercase."
+  (and (>= char 97) (<= char 122)))
+
+(defun is-upper (char)
+  "Check whether the CHAR is uppercase."
+  (and (>= char 65) (<= char 90)))
+
+;; Demos:
+;; - URLString
+;; - UrlString
+;; - url_string
+
+(defun v-thing-mark-dwim ()
+  "Mark thing dwim."
+  (interactive)
+  (let (end)
+    (pcase (char-after)
+      ((pred is-lower)
+       (while (is-lower (following-char))
+         (forward-char))
+       (setq end (point))
+       (while (is-lower (preceding-char))
+         (backward-char))
+       (if (is-upper (preceding-char))
+           (backward-char))
+       ;; (setq begin (point))
+       (push-mark end)
+       (setq mark-active t))
+      ((pred is-upper)
+       (while (is-upper (following-char))
+         (forward-char))
+       (if (is-lower (following-char))
+           (backward-char))
+       (setq end (point))
+       (while (is-upper (preceding-char))
+         (backward-char))
+       ;; (setq begin (point))
+       (push-mark end)
+       (setq mark-active t)))))
+
+(defun v-thing-mark-line ()
+  "Select current line."
+  (interactive)
+  (let (p1 p2)
+    (setq p1 (line-beginning-position))
+    (setq p2 (line-end-position))
+    (goto-char p1)
+    (push-mark p2)
+    (setq mark-active t)))
 
 ;;;; Window
 
@@ -308,6 +368,10 @@
   :hook (v-editor . ws-butler-global-mode))
 
 
+;;;; Misc
+
+(use-package string-inflection)
+
 (defun v-copy-and-comment-region (beg end &optional arg)
   "Duplicate the region BEG to END and comment out the copied text.
 See `comment-region' for prefix ARG.
@@ -326,6 +390,60 @@ Refer https://stackoverflow.com/a/23588908/7134763."
   ("C-a" . mwim-beginning)
   ("C-e" . mwim-end))
 
+;; REF http://kuanyui.github.io/2014/01/18/count-chinese-japanese-and-english-words-in-emacs/
+
+(defvar wc-regexp-chinese-char-and-punc
+  (rx (category chinese)))
+(defvar wc-regexp-chinese-punc
+  "[。，！？；：「」『』（）、【】《》〈〉※—]")
+(defvar wc-regexp-english-word
+  "[a-zA-Z0-9-]+")
+
+(defun wc ()
+  "Word count supporting Chinese, Japanese, and English.
+「較精確地」統計中/日/英文字數。
+- 文章中的註解不算在字數內。
+- 平假名與片假名亦包含在「中日文字數」內，每個平/片假名都算單獨一個字（但片假
+  名不含連音「ー」）。
+- 英文只計算「單字數」，不含標點。
+- 韓文不包含在內。
+
+※計算標準太多種了，例如英文標點是否算入、以及可能有不太常用的標點符號沒算入等
+。且中日文標點的計算標準要看 Emacs 如何定義特殊標點符號如ヴァランタン・アルカン
+中間的點也被 Emacs 算為一個字而不是標點符號。"
+  (interactive)
+  (let* ((v-buffer-string (buffer-substring-no-properties (point-min) (point-max)))
+         (chinese-char-and-punc 0)
+         (chinese-punc 0)
+         (english-word 0)
+         (chinese-char 0))
+    (if (eq major-mode 'org-mode) ; 去掉 org 文件的 OPTIONS（以#+開頭）
+        (setq v-buffer-string (replace-regexp-in-string "^#\\+.+" "" v-buffer-string)))
+    (setq v-buffer-string ; 把註解行刪掉（不把註解算進字數）。
+          (replace-regexp-in-string (format "^ *%s *.+" comment-start) "" v-buffer-string))
+    (with-temp-buffer
+      (insert v-buffer-string)
+      (goto-char (point-min))
+      ;; 中文（含標點、片假名）
+      (while (re-search-forward wc-regexp-chinese-char-and-punc nil :no-error)
+        (setq chinese-char-and-punc (1+ chinese-char-and-punc)))
+      ;; 中文標點符號
+      (goto-char (point-min))
+      (while (re-search-forward wc-regexp-chinese-punc nil :no-error)
+        (setq chinese-punc (1+ chinese-punc)))
+      ;; 英文字數（不含標點）
+      (goto-char (point-min))
+      (while (re-search-forward wc-regexp-english-word nil :no-error)
+        (setq english-word (1+ english-word))))
+    (setq chinese-char (- chinese-char-and-punc chinese-punc))
+    (message
+     (format "中日文字數（不含標點）：%s
+中日文字數（包含標點）：%s
+英文字數  （不含標點）：%s
+=======================
+中英文合計（不含標點）：%s"
+             chinese-char chinese-char-and-punc english-word
+             (+ chinese-char english-word)))))
 
 (provide 'init-editor)
 ;;; init-editor.el ends here

@@ -103,6 +103,22 @@
         (org-babel-do-load-languages
          'org-babel-load-languages org-babel-load-languages))
 
+      (use-package ox-html :ensure nil
+        :config
+        ;; REF https://coldnew.github.io/a1ed40e3/
+        (defadvice org-html-paragraph (before org-html-paragraph-advice
+                                              (paragraph contents info) activate)
+          "Join consecutive Chinese lines into a single long line.
+Without unwanted space when exporting `org-mode' to html."
+          (let* ((origin-contents (ad-get-arg 1))
+                 (fix-regexp "[[:multibyte:]]")
+                 (fixed-contents
+                  (replace-regexp-in-string
+                   (concat
+                    "\\(" fix-regexp "\\) *\n *\\(" fix-regexp "\\)") "\\1\\2" origin-contents)))
+
+            (ad-set-arg 1 fixed-contents))))
+
       (use-package ox-gfm)
 
       (use-package ox-hugo
@@ -190,6 +206,14 @@
 
 
 ;;;; Outline commands:
+
+(defun v-org-grep-headlines ()
+  "Grep current headlines of current org file."
+  (interactive)
+  (unless (eq major-mode 'org-mode)
+    (user-error "Not in org-mode"))
+  (grep (format "grep --color -nH -E '^\\*+ .+' %s"
+                (s-replace default-directory "" buffer-file-name))))
 
 ;;;###autoload
 (defun v-org-goto ()

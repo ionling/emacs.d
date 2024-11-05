@@ -1,6 +1,7 @@
 ;;; v-unknown.el --- Some unknown functions or commands
 
-;; Version: 20240321
+;; Version: 20241108
+;; Package-Requires: (expand-region go-playground request s smartparens)
 
 ;;; Commentary:
 
@@ -8,8 +9,15 @@
 ;; this package.
 
 ;;; Code:
-(require 'v-pkg)
+(require 'er-basic-expansions)
+(require 'go-playground)
+(require 'request)
 (require 's)
+(require 'smartparens)
+
+(require 'v-org)
+(require 'v-pkg)
+
 (v-require projectile)
 
 ;;;; Douban
@@ -53,6 +61,20 @@
    `(,url ,(current-buffer))))
 
 
+;;;; sexp
+
+;;;###autoload
+(defun v-sexp-disable ()
+  "Disable current sexp."
+  (interactive)
+  (sp-wrap-round)
+  (insert "when nil\n"))
+
+;;;###autoload
+(defalias 'v-sexp-enable #'sp-raise-sexp
+  "Enable current sexp.")
+
+
 ;;;; Visual Studio Code
 
 ;;;###autoload
@@ -83,6 +105,50 @@
 Refer https://www.emacswiki.org/emacs/InsertingTodaysDate."
   (interactive)
   (insert (format-time-string "%Y-%m-%d")))
+
+(defun v-link-markup (link format)
+  "Call markup-link API use LINK and FORMAT params."
+  (request "http://127.0.0.1:6666/api/markup-link"
+    :type "POST"
+    :data (json-encode `(("format" . ,format) ("link". ,link)))
+    :parser 'json-read
+    :error (cl-function
+            (lambda (&rest args &key error-thrown &allow-other-keys)
+              (message "Got error: %S" error-thrown)))
+    :success (cl-function
+              (lambda (&key data &allow-other-keys)
+                (insert (alist-get 'markup data))))))
+
+;;;###autoload
+(defun v-link-md-clipboard ()
+  "Insert markdown link."
+  (interactive)
+  (v-link-markup (current-kill 0) 'md))
+
+;;;###autoload
+(defun v-link-org-clipboard ()
+  "Insert `org-mode' link."
+  (interactive)
+  (v-link-markup (current-kill 0) 'org))
+
+;;;###autoload
+(defun v-org-babel-go-playground ()
+  "Run current babel code in go playground."
+  (interactive)
+  (v-org-babel-copy-code)
+  (go-playground)
+  (search-backward-regexp "package main")
+  (delete-region (point) (point-max))
+  (yank))
+
+;;;###autoload
+(defun v-prog-func-count-lines ()
+  "Count current function lines."
+  (interactive)
+  (save-mark-and-excursion
+    (er/mark-defun)
+    (message "Current function total %d lines"
+             (count-lines (region-beginning) (region-end)))))
 
 ;;;###autoload
 (defun v-wechat-clean-url (url)

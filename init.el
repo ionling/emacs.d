@@ -38,7 +38,35 @@
 (v-with-idle-timer 2
   (run-hooks 'v-ui-hook))
 
+
 (require 'v-pkg (v-join-user-emacsd "v" "v-pkg.el"))
+(use-package v-pkg :v-ensure)
+(use-package v-file :v-ensure)
+(use-package v-demo :v-ensure)
+(use-package v-graphic :v-ensure)
+(use-package v-text :v-ensure)
+(use-package v-unknown :v-ensure)
+(use-package v-avy :v-ensure
+  :defer .3
+  :config (v-avy-config))
+(use-package v-ivy :v-ensure
+  :defer .3
+  :config (v-ivy-config))
+(use-package v-complete :v-ensure
+  :defer .4
+  :config (v-complete-config))
+(use-package v-auto-theme :v-ensure
+  :defer .5
+  :config (v-auto-theme-config))
+(use-package v-wsl :v-ensure
+  :if is-wsl
+  :defer .5
+  :config (v-wsl-config))
+(use-package v-org :v-ensure
+  :defer 1
+  :config (v-org-config))
+
+
 (require 'init-file)
 (require 'init-tools)
 (require 'init-coding)
@@ -72,34 +100,6 @@
   (interactive)
   (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
   (v-python-config))
-
-(use-package v-pkg :v-ensure)
-(use-package v-file :v-ensure)
-(use-package v-demo :v-ensure)
-(use-package v-graphic :v-ensure)
-(use-package v-text :v-ensure)
-(use-package v-unknown :v-ensure)
-(use-package v-avy :v-ensure
-  :defer .3
-  :config (v-avy-config))
-(use-package v-ivy :v-ensure
-  :defer .3
-  :config (v-ivy-config))
-(use-package v-complete :v-ensure
-  :defer .4
-  :config (v-complete-config))
-(use-package v-auto-theme :v-ensure
-  :defer .5
-  :config (v-auto-theme-config))
-(use-package v-wsl :v-ensure
-  :if is-wsl
-  :defer .5
-  :config (v-wsl-config))
-(use-package v-org :v-ensure
-  :defer 1
-  :config (v-org-config))
-
-(use-package ime-frame :v-ensure)
 
 
 ;;;; Emacs

@@ -131,6 +131,42 @@
     :config
     (hydra-posframe-enable))
 
+  (defhydra hydra-window (global-map "C-c w")
+    "
+^  ^Size^         ^^Switch^       ^Split^            ^Buffer      | Window |
+^--^----^---------^^------^-------^-----^------------^------------+--------+
+^    _k_          ^_n_ext         _v_ertical         _b_ switch
+^    ^↑^          ^_p_revious     _x_ horizontal     _c_ close(kill)
+_h_ ←   → _l_      _s_elect       _g_ golden         _r_ recentf
+^    ^↓^          ^_d_elete
+^    _j_
+"
+    ("h" (lambda ()
+           (interactive)
+           (shrink-window-horizontally 10)))
+    ("l" (lambda ()
+           (interactive)
+           (enlarge-window-horizontally 10)))
+    ("j" (lambda ()
+           (interactive)
+           (shrink-window 4)))
+    ("k" (lambda ()
+           (interactive)
+           (enlarge-window 4)))
+    ("n" other-window)
+    ("p" (lambda ()
+           (interactive)
+           (other-window -1)))
+    ("d" delete-window)
+    ("s" ace-select-window)
+
+    ("v" split-window-right)
+    ("x" split-window-below)
+    ("g" v-window-golden)
+
+    ("b" ivy-switch-buffer)
+    ("c" kill-current-buffer)
+    ("r" counsel-recentf))
 
   ;; https://github.com/abo-abo/hydra/wiki/Org-clock-and-timers
   (defhydra hydra-org-clock (:color blue :hint nil)

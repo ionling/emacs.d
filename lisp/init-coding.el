@@ -174,8 +174,9 @@
       js-mode
       nim-mode
       ruby-mode)
-     . lsp-deferred
-     (lsp-mode . #'v-coding-set-actions))
+     . lsp-deferred)
+    :init
+    (add-hook 'lsp-mode-hook #'v-coding-set-actions)
     :config
     ;; Increase the amount of data which Emacs reads from the process.
     ;; Again the emacs default is too low 4k considering that

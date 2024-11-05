@@ -7,6 +7,7 @@
 (require 'use-package)
 
 (require 'dash)
+(require 'f)
 
 (require 'init-core)
 
@@ -215,6 +216,18 @@ see `use-package-process-keywords' for REST and STATE."
         (insert (format "- %s\n" pkg))))
     (switch-to-buffer buffer)))
 
+;;;###autoload
+(defun v-pkg-show-version (pkg)
+  "Show the highest version of a PKG."
+  (interactive
+   (->> (-map #'car package-alist)
+        (completing-read "Package: ")
+        list))
+  (->> (f-glob (concat pkg "*") (v-join-user-emacsd "elpa"))
+       (-map #'f-filename)
+       (-sort #'string-greaterp)
+       -first-item
+       message))
 
 (provide 'v-pkg)
 

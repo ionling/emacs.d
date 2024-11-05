@@ -1,10 +1,14 @@
 ;;; init-drafts.el --- Some drafts here  -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
-(require 'init-core)
+(require 'org)
 (require 'use-package)
 
 (require 's)
+
+(require 'init-core)
+(require 'v-file)
+(require 'v-unknown)
 
 
 ;; Started at <2023-03-04 Sat>
@@ -23,6 +27,12 @@
   ;; Not working with TMUX and Alacritty
   (use-package clipetty :disabled))
 
+(general-def vision-map
+  :prefix "d"
+  :prefix-command 'vision-file-map
+  "i" #'v-edit-user-init-file
+  "n" #'v-file-show-name)
+
 (defun v-company-space ()
   "Call `company-abort' and insert a space."
   (interactive)
@@ -32,6 +42,19 @@
 (when nil
   (with-eval-after-load 'company
     (general-def company-active-map "SPC" #'v-company-space)))
+
+(defun v-diary-convert ()
+  "Convert diary to org format."
+  (interactive)
+  (when (eq (forward-line) 0)
+    (if  (->> (thing-at-point 'line t)
+              s-trim
+              (s-matches?
+               (rxt-pcre-to-elisp "\\d+\\.\\d+\\.\\d+")))
+        (org-toggle-heading 2))
+    (v-diary-convert)))
+
+
 ;;;; Complete v2
 (when nil
   (use-package vertico

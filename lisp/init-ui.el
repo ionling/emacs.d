@@ -17,6 +17,17 @@
     (set-face-attribute 'default t :font font)
     (set-frame-font font nil t)))
 
+;; REF https://emacs-china.org/t/topic/20587
+;; REF https://stackoverflow.com/a/19547480
+
+(defun v-font-set-cjk (name)
+  "Set CJK font to NAME."
+  (interactive)
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+                      charset
+                      (font-spec :family name))))
+
 (defun v-font-find-by-name (name)
   "Find font by NAME."
   (find-font (font-spec :name name)))
@@ -36,6 +47,8 @@
             (if (equal (system-name) "ion-gnome")
                 (v-font-set-meslo))))
 
+
+;;;; Theme
 
 (defgroup v-theme nil
   "Vision theme."
