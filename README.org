@@ -5,3 +5,19 @@ My personal Emacs config based on =use-package=, =evil= and =counsel=.
 - lisp: Require based config, dont neet autoload
 - site-lisp: Third party lisp code
 - v: Package based config
+
+* Pending packages
+
+- 2025-08-20
+  - https://github.com/sunskyxh/ast-grep.el
+  - https://github.com/inaimathi/aidev-mode
+  - https://github.com/Dev380/automoji-el
+  - https://github.com/KeyWeeUsr/conventional?tab=readme-ov-file
+  - https://github.com/eki3z/ddp.el
+  - https://github.com/editor-code-assistant/eca-emacs
+  - https://github.com/countvajhula/pubsub
+  - https://github.com/hron/too-wide-minibuffer-mode
+  - https://github.com/jdtsmith/ultra-scroll
+- 2025-12-16
+  - https://codeberg.org/trevoke/dag-draw.el
+  - https://github.com/jamescherti/kirigami.el

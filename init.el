@@ -227,5 +227,17 @@ Refer https://emacs-china.org/t/topic/2808/24."
 (use-package evil-surround
   :hook (evil-mode . global-evil-surround-mode))
 
+(pcase (system-name)
+  ("gamepc"
+   (v-font-set "JetBrainsMono Nerd Font" 16))
+
+  ("ion-gnome"
+   ;; date "2025-12-16"
+   (use-package copilot
+     :hook prog-mode)
+
+   (use-package copilot-chat
+     :disabled
+     (setq copilot-chat-backend 'curl))))
 
 ;;; init.el ends here
