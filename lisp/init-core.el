@@ -208,15 +208,6 @@ Keywords:
 
 (use-package dash)
 
-(use-package quelpa
-  :disabled                             ; 2022-09-04 May slow Emacs startup
-  :custom
-  (quelpa-checkout-melpa-p nil))
-
-(use-package quelpa-use-package
-  :disabled                             ; Same as up
-  :demand)
-
 (use-package gnu-elpa-keyring-update)
 
 (use-package delight)

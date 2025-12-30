@@ -130,32 +130,6 @@
   (rime-show-candidate 'posframe))
 
 
-(use-package pyim
-  :disabled
-  :defer 1
-  :if (and window-system is-wsl)
-  :custom
-  (default-input-method "pyim")
-  (pyim-default-scheme 'microsoft-shuangpin)
-  (pyim-page-tooltip 'posframe "Better performance than popup")
-  :config
-  ;; 使用半角标点
-  (setq-default pyim-punctuation-translate-p '(no yes auto))
-
-  ;; 使 pyim 在 ivy-posframe 中能够显示候选词
-  ;; https://github.com/tumashu/ivy-posframe/issues/80#issuecomment-683519783
-  (with-eval-after-load 'ivy-posframe
-    (setq ivy-posframe-hide-minibuffer nil)))
-
-
-(use-package pyim-basedict
-  :disabled
-  :after pyim
-  :demand t
-  :config
-  (pyim-basedict-enable))
-
-
 ;;;; Graphic
 
 (when (display-graphic-p)
