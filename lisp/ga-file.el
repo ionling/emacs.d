@@ -1,4 +1,4 @@
-;;; init-file.el --- File related config
+;;; ga-file.el --- File related config
 ;;; Commentary:
 ;;; Code:
 (require 'use-package)
@@ -11,5 +11,5 @@
   :config
   (recentf-mode))
 
-(provide 'init-file)
-;;; init-file.el ends here
+(provide 'ga-file)
+;;; ga-file.el ends here

@@ -24,7 +24,7 @@
 
 ;;;; Modules
 
-(require 'init-core)                    ; Must be loaded first
+(require 'aa-core)                    ; Must be loaded first
 
 ;; The benchmark should be placed at the top of init.el so that it covers all init code.
 (use-package benchmark-init
@@ -39,8 +39,7 @@
   (run-hooks 'v-ui-hook))
 
 
-(require 'v-pkg (v-join-user-emacsd "v" "v-pkg.el"))
-(use-package v-pkg :v-ensure)
+(require 'ad-pkg)
 (use-package v-file :v-ensure)
 (use-package v-demo :v-ensure)
 (use-package v-graphic :v-ensure)
@@ -67,23 +66,24 @@
   :config (v-org-config))
 
 
-(require 'init-file)
-(require 'init-tools)
-(require 'init-coding)
-(require 'init-git)
-(require 'init-langs)
-(require 'init-editor)
-(require 'init-ui)
-(require 'init-highlight)
-(require 'init-drafts)
+(require 'ga-file)
+(require 'ya-tools)
+(require 'pa-coding)
+(require 'sa-git)
+(require 'va-langs)
+(require 'da-editor)
+(require 'ja-ui)
+(require 'ma-highlight)
+(require 'zb-drafts)
 
+
+(yes-flycheck)
 
 (v-load doom-ui
         tabs
         treemacs)
 
 (v-load dumb-jump
-        flycheck
         hydra
         lsp)
 
@@ -92,14 +92,7 @@
         html
         plantuml
         xml
-        yaml)
-
-
-(defun v-python ()
-  "Load `v-python' package."
-  (interactive)
-  (quelpa '(v-python :fetcher file :path "~/.emacs.d/v/v-python.el"))
-  (v-python-config))
+        )
 
 
 ;;;; Emacs

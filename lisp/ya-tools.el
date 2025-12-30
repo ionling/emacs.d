@@ -1,10 +1,10 @@
-;;; init-tools.el --- Load some useful tools
+;;; ya-tools.el --- Load some useful tools
 ;;; Commentary:
 ;;; Code:
 (require 'use-package)
 
-(require 'init-core)
-(require 'init-modules)
+(require 'aa-core)
+(require 'modules)
 
 
 (use-package bug-hunter)
@@ -188,5 +188,5 @@ Clock   In/out^     ^Edit^   ^Summary     (_?_)
     ("?" (org-info "Clocking commands"))))
 
 
-(provide 'init-tools)
-;;; init-tools.el ends here
+(provide 'ya-tools)
+;;; ya-tools.el ends here

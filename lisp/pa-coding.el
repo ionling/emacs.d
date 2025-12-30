@@ -1,10 +1,10 @@
-;;; init-coding.el --- Coding stuff
+;;; pa-coding.el --- Coding stuff
 ;;; Commentary:
 ;;; Code:
 (require 'dash)
 
-(require 'init-core)
-(require 'init-modules)
+(require 'aa-core)
+(require 'modules)
 
 
 (v-defun lang-find-definition
@@ -101,7 +101,9 @@
     (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)))
 
 
-(v-defmodule flycheck
+(defun yes-flycheck ()
+  "Load flycheck config."
+  (interactive)
   (use-package flycheck
     :defer 1
     :custom
@@ -220,5 +222,5 @@
      global-semanticdb-minor-mode)))
 
 
-(provide 'init-coding)
-;;; init-coding.el ends here
+(provide 'pa-coding)
+;;; pa-coding.el ends here

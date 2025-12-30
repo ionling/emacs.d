@@ -9,7 +9,7 @@
 (require 'dash)
 (require 'f)
 
-(require 'init-core)
+(require 'aa-core)
 
 
 (defmacro v-require (feature)
@@ -229,6 +229,6 @@ see `use-package-process-keywords' for REST and STATE."
        -first-item
        message))
 
-(provide 'v-pkg)
+(provide 'ad-pkg)
 
-;;; v-pkg.el ends here
+;;; ad-pkg.el ends here

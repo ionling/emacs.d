@@ -12,43 +12,41 @@
 
 (require 'use-package)
 
-(require 'v-pkg)
+(require 'ad-pkg)
 
 (v-require py-isort)
 (v-require python-black)
 
 
 ;;;###autoload
-(defun v-python-config ()
+(defun yes-python ()
   "Load python config."
   (interactive)
-  (eval
-   '(progn
-      (use-package python
-        :config
-        ;; https://stackoverflow.com/a/14033335/7134763
-        (define-coding-system-alias 'UTF-8 'utf-8)
-        (setq-local v-lang-format-func #'v-python-format
-                    v-lang-sort-imports-func #'v-python-sort-imports))
+  (use-package python
+    :config
+    ;; https://stackoverflow.com/a/14033335/7134763
+    (define-coding-system-alias 'UTF-8 'utf-8)
+    (setq-local v-lang-format-func #'v-python-format
+                v-lang-sort-imports-func #'v-python-sort-imports))
 
-      (use-package pipenv
-        :delight " Pe"
-        :hook (python-mode . pipenv-mode)
-        :init
-        (advice-add 'pipenv-activate :after #'v-python-fix-lsp-ms-cmd))
+  (use-package pipenv
+    :delight " Pe"
+    :hook (python-mode . pipenv-mode)
+    :init
+    (advice-add 'pipenv-activate :after #'v-python-fix-lsp-ms-cmd))
 
-      (use-package py-isort)
+  (use-package py-isort)
 
-      (use-package python-black
-        :delight python-black-on-save-mode
-        :hook (python-mode . python-black-on-save-mode))
+  (use-package python-black
+    :delight python-black-on-save-mode
+    :hook (python-mode . python-black-on-save-mode))
 
-      (use-package lsp-pyright
-        :hook
-        (python-mode
-         . (lambda ()
-             (require 'lsp-pyright)
-             (lsp-deferred)))))))
+  (use-package lsp-pyright
+    :hook
+    (python-mode
+     . (lambda ()
+         (require 'lsp-pyright)
+         (lsp-deferred)))))
 
 
 ;; From https://www.snip2code.com/Snippet/127022/Emacs-auto-remove-unused-import-statemen

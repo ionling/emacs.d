@@ -1,4 +1,4 @@
-;;; init-core.el --- Config core
+;;; aa-core.el --- Config core
 ;;; Commentary:
 ;;; Code:
 (require 'package)
@@ -280,5 +280,5 @@ Keywords:
   (projectile-mode))
 
 
-(provide 'init-core)
-;;; init-core.el ends here
+(provide 'aa-core)
+;;; aa-core.el ends here

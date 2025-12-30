@@ -1,4 +1,4 @@
-;;; init-drafts.el --- Some drafts here  -*- lexical-binding: t -*-
+;;; zb-drafts.el --- Some drafts here  -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 (require 'org)
@@ -6,7 +6,7 @@
 
 (require 's)
 
-(require 'init-core)
+(require 'aa-core)
 (require 'v-file)
 (require 'v-unknown)
 
@@ -177,5 +177,5 @@
        (format (concat "	%s EventType = \"" name "\""))
        insert))
 
-(provide 'init-drafts)
-;;; init-drafts.el ends here
+(provide 'zb-drafts)
+;;; zb-drafts.el ends here

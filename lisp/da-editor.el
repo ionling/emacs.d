@@ -1,9 +1,9 @@
-;;; init-editor.el --- Config of common editor features
+;;; da-editor.el --- Config of common editor features
 ;;; Commentary:
 ;;; Code:
 (require 's)
 
-(require 'init-core)
+(require 'aa-core)
 
 
 (defcustom v-file-save-place t
@@ -417,6 +417,8 @@ Refer https://stackoverflow.com/a/23588908/7134763."
          (chinese-punc 0)
          (english-word 0)
          (chinese-char 0))
+    (if (use-region-p)
+        (setq v-buffer-string (buffer-substring-no-properties (region-beginning) (region-end))))
     (if (eq major-mode 'org-mode) ; 去掉 org 文件的 OPTIONS（以#+開頭）
         (setq v-buffer-string (replace-regexp-in-string "^#\\+.+" "" v-buffer-string)))
     (setq v-buffer-string ; 把註解行刪掉（不把註解算進字數）。
@@ -445,5 +447,5 @@ Refer https://stackoverflow.com/a/23588908/7134763."
              chinese-char chinese-char-and-punc english-word
              (+ chinese-char english-word)))))
 
-(provide 'init-editor)
-;;; init-editor.el ends here
+(provide 'da-editor)
+;;; da-editor.el ends here

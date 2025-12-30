@@ -1,9 +1,9 @@
-;;; init-git.el --- Git stuff
+;;; sa-git.el --- Git stuff
 ;;; Commentary:
 ;;; Code:
 (require 'use-package)
 
-(require 'init-core)
+(require 'aa-core)
 
 
 (defvar v-git-map (make-sparse-keymap)
@@ -54,5 +54,5 @@
   (vc-command-messages t))
 
 
-(provide 'init-git)
-;;; init-git.el ends here
+(provide 'sa-git)
+;;; sa-git.el ends here

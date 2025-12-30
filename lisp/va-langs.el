@@ -1,8 +1,8 @@
-;;; init-langs.el --- Load languages
+;;; va-langs.el --- Load languages
 ;;; Commentary:
 ;;; Code:
-(require 'init-core)
-(require 'init-coding)
+(require 'aa-core)
+(require 'pa-coding)
 
 
 (defvar v-lang-map (make-sparse-keymap))
@@ -112,11 +112,8 @@
     (nxml-mode . prettier-js-mode)))
 
 
-(v-defmodule yaml
-  (use-package prettier-js
-    :hook
-    (yaml-mode . prettier-js-mode))
-
+(defun yes-yaml ()
+  (interactive)
   (use-package yaml-mode))
 
 
@@ -166,5 +163,5 @@
   (sh-mode . v-sh-outline-set-local))
 
 
-(provide 'init-langs)
-;;; init-langs.el ends here
+(provide 'va-langs)
+;;; va-langs.el ends here

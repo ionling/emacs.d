@@ -1,4 +1,4 @@
-;;; init-ui.el --- UI configuration
+;;; ja-ui.el --- UI configuration
 ;;; Commentary:
 ;;; Code:
 
@@ -7,7 +7,7 @@
 
 (require 'f)
 
-(require 'init-core)
+(require 'aa-core)
 
 
 ;;;; Font
@@ -187,5 +187,5 @@
 (v-with-idle-timer .1
   (v-theme-random))
 
-(provide 'init-ui)
-;;; init-ui.el ends here
+(provide 'ja-ui)
+;;; ja-ui.el ends here

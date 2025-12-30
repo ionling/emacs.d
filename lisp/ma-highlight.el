@@ -1,4 +1,4 @@
-;;; init-highlight.el --- Editor highlight support       -*- lexical-binding: t -*-
+;;; ma-highlight.el --- Editor highlight support       -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -63,5 +63,5 @@
   (general-def 'vision-map "s" symbol-overlay-map))
 
 
-(provide 'init-highlight)
-;;; init-highlight.el ends here
+(provide 'ma-highlight)
+;;; ma-highlight.el ends here
