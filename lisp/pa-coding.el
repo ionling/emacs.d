@@ -47,8 +47,6 @@
 
 ;;;; Format
 
-;; Deprecated as of 20230805, use apheleia instead.
-(use-package format-all :disabled)
 (use-package apheleia
   :delight " Ap"
   :defer 1

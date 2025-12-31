@@ -34,9 +34,6 @@
 (v-init-register-ext 'go #'v-init-golang)
 
 
-(delight 'prettier-js-mode " Pr" 'prettier-js)
-
-
 (v-defmodule elisp
   (use-package macrostep)
 
@@ -49,12 +46,6 @@
   (use-package elixir-mode))
 
 
-(v-defmodule html
-  (use-package prettier-js
-    :hook
-    (mhtml-mode . prettier-js-mode)))
-
-
 (v-defmodule hy
   (use-package hy-mode
     :init
@@ -63,10 +54,6 @@
 
 
 (v-defmodule javascript
-  (use-package prettier-js
-    :hook
-    (js-mode . prettier-js-mode))
-
   (use-package js :ensure nil
     :custom
     (js-indent-level 2 "Keep same to prettier")))
@@ -104,12 +91,6 @@
 (v-defmodule raku
   (use-package raku-mode
     :mode ("\\.raku\\'" . raku-mode)))
-
-
-(v-defmodule xml
-  (use-package prettier-js
-    :hook
-    (nxml-mode . prettier-js-mode)))
 
 
 (defun yes-yaml ()

@@ -89,9 +89,7 @@
 
 (v-load elisp
         javascript
-        html
         plantuml
-        xml
         )
 
 
