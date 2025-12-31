@@ -69,7 +69,7 @@
   :general
   (v-point-map "y" #'v-youdao-dict-search-at-point))
 
-(use-package go-translate
+(use-package gt
   :custom
   (gt-langs '(en zh))
   :general

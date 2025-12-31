@@ -90,13 +90,12 @@
   (use-package dockerfile-mode))
 
 
-(v-defmodule dumb-jump
-  (use-package dumb-jump
-    :defer 4
-    :custom
-    (dumb-jump-selector 'ivy)
-    :config
-    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)))
+(use-package dumb-jump
+  :defer 4
+  :custom
+  (dumb-jump-selector 'ivy)
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 
 (defun yes-flycheck ()
@@ -135,7 +134,10 @@
     (flycheck-mode . sideline-flycheck-setup)))
 
 
-(v-defmodule lsp
+(defun yes-lsp ()
+  "Load LSP config."
+  (interactive)
+
   (defun v-lsp-workspace-remove-all ()
     "Remove all lsp workspaces."
     (interactive)
@@ -194,14 +196,18 @@
   (use-package ob-restclient))
 
 
-(v-defmodule treemacs
+(defun yes-treemacs ()
+  (interactive)
+
   (use-package treemacs
     :general
     (vision-file-map "t" #'treemacs))
 
-  (use-package lsp-treemacs :if v-mod-lsp-enabled)
+  (use-package lsp-treemacs
+    :after (treemacs lsp-mode))
 
-  (use-package treemacs-projectile))
+  (use-package treemacs-projectile
+    :after (treemacs projectile)))
 
 
 ;;;; Disabled
@@ -219,6 +225,12 @@
      global-semantic-mru-bookmark-mode
      global-semanticdb-minor-mode)))
 
+
+(defun yes-coding ()
+  "Load coding config."
+  (interactive)
+  (yes-flycheck)
+  (yes-lsp))
 
 (provide 'pa-coding)
 ;;; pa-coding.el ends here

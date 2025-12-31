@@ -146,7 +146,9 @@
 
 
 
-(v-defmodule doom-ui
+(defun yes-doom-ui ()
+  (interactive)
+
   (defun v-mode-line-toggle-encoding ()
     "Toggle the buffer encoding display."
     (interactive)

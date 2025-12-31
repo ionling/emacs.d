@@ -77,19 +77,14 @@
 (require 'zb-drafts)
 
 
-(yes-flycheck)
 
-(v-load doom-ui
-        tabs
-        treemacs)
-
-(v-load dumb-jump
-        hydra
-        lsp)
+(yes-doom-ui)
 
 (v-load elisp
         javascript
         plantuml
+
+        hydra
         )
 
 
