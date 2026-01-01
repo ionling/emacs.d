@@ -82,7 +82,6 @@
 
 (v-load elisp
         javascript
-        plantuml
 
         hydra
         )

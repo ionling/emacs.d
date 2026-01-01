@@ -98,11 +98,11 @@
   (use-package yaml-mode))
 
 
-(v-defmodule plantuml
-  (use-package plantuml-mode
-    :custom
-    (plantuml-default-exec-mode 'executable)
-    (plantuml-indent-level 4)))
+(use-package plantuml-mode
+  :yes plantuml
+  :custom
+  (plantuml-default-exec-mode 'executable)
+  (plantuml-indent-level 4))
 
 ;;;; Protocol Buffers
 (defun v-protobuf-config ()

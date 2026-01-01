@@ -196,6 +196,27 @@ see `use-package-process-keywords' for REST and STATE."
                   (add-to-list 'v-pkg-tags ',tag))))
             args))))
 
+;;;;; yes
+
+;; A simple way to enable a feature.
+;; Use :yes keyword to define a yes module,
+;; which can be enabled by `yes-<module>'.
+(push-after :yes :tags 'use-package-keywords)
+
+(defun use-package-normalize/:yes (_name _keyword args)
+  "Normalize ARGS for `:yes' keyword."
+  (car args))
+
+(defun use-package-handler/:yes (name _keyword args rest state)
+  "Handle `:yes' for NAME package.
+see `use-package-process-keywords' for REST and STATE."
+  (let ((body (use-package-process-keywords name rest state)))
+    `((defun ,(intern (format "yes-%s" args)) ()
+        ,(format "Enable %s module." args)
+        (interactive)
+        ,@body))))
+
+
 ;;;; Advices
 
 (defvar v-pkg-all '(use-package))
