@@ -45,15 +45,6 @@
 (use-package v-graphic :v-ensure)
 (use-package v-text :v-ensure)
 (use-package v-unknown :v-ensure)
-(use-package v-avy :v-ensure
-  :defer .3
-  :config (v-avy-config))
-(use-package v-ivy :v-ensure
-  :defer .3
-  :config (v-ivy-config))
-(use-package v-complete :v-ensure
-  :defer .4
-  :config (v-complete-config))
 (use-package v-auto-theme :v-ensure
   :defer .5
   :config (v-auto-theme-config))
@@ -61,24 +52,31 @@
   :if is-wsl
   :defer .5
   :config (v-wsl-config))
-(use-package v-org :v-ensure
-  :defer 1
-  :config (v-org-config))
 
 
 (require 'ga-file)
-(require 'ya-tools)
 (require 'pa-coding)
-(require 'sa-git)
-(require 'va-langs)
+(v-require-module 'git sa-git)
 (require 'da-editor)
-(require 'ja-ui)
-(require 'ma-highlight)
-(require 'zb-drafts)
+(v-require-module 'company db-company)
+(v-require-module 'ivy dc-ivy)
+(v-require-module 'avy dd-avy)
+(v-require-module 'ui ja-ui)
+(v-require-module 'highlight ma-highlight)
+(v-require-module 'langs va-langs)
+(v-require-module 'org vo-org)
+(v-require-module 'tools ya-tools)
+(v-require-module 'drafts zb-drafts)
 
 
 
 (yes-doom-ui)
+(yes-company)
+(yes-ui)
+(yes-highlight)
+(yes-ivy)
+(yes-avy)
+(yes-git)
 
 ;; (yes-javascript)
 
@@ -86,7 +84,6 @@
 
 (v-load elisp
 
-        hydra
         )
 
 
@@ -166,33 +163,6 @@ Refer https://emacs-china.org/t/topic/2808/24."
 (use-package key-assist)
 
 
-(defun yes-evil ()
-  "Enable evil-mode."
-  (interactive)
-  (use-package evil
-    :hook (v-editor . evil-mode)
-    :custom
-    (evil-undo-system 'undo-tree)
-    :config
-    (dolist (key '("C-a" "C-e" "C-n" "C-p" "C-d" "C-y"))
-      (define-key evil-insert-state-map (kbd key) nil))
-    (dolist (key '("C-e" "C-i"))
-      (define-key evil-motion-state-map (kbd key) nil))
-  
-    (delete 'compilation-mode evil-motion-state-modes)
-    (setq evil-default-state 'emacs)
-    (setq evil-normal-state-modes
-          (-union evil-normal-state-modes
-                  '(prog-mode text-mode org-mode conf-mode yaml-mode))))
-  
-  (use-package evil-escape
-    :hook evil-mode)
-  
-  (use-package evil-surround
-    :hook (evil-mode . global-evil-surround-mode)))
-
-
-(yes-evil)
 
 (setq org-id-files '("~/org/x.org"
                      "~/org/pl.org"
@@ -216,5 +186,8 @@ Refer https://emacs-china.org/t/topic/2808/24."
    (use-package copilot-chat
      :disabled
      (setq copilot-chat-backend 'curl))))
+
+(use-package easy-theme-preview)
+
 
 ;;; init.el ends here

@@ -21,3 +21,26 @@ My personal Emacs config based on =use-package=, =evil= and =counsel=.
 - 2025-12-16
   - https://codeberg.org/trevoke/dag-draw.el
   - https://github.com/jamescherti/kirigami.el
+
+
+* Notes
+
+** after-init-hook vs emacs-startup-hook
+
+~after-init-hook~ is better for enabling ~ivy-mode~.
+
+Here's why:
+
+1. ~after-init-hook~ runs after all init files are loaded
+   but before displaying the initial buffer. This is the standard place for enabling global modes.
+2. ~emacs-startup-hook~ runs later, after command-line arguments are processed
+   and the initial buffer is displayed. This delays mode activation unnecessarily.
+
+For ~ivy-mode~, you want it ready as early as possible so commands like ~M-x~ work immediately.
+Your current approach with ~:hook (after-init . ivy-mode)~ is correct.
+
+The typical ordering is:
+
+- ~after-init-hook~ → Enable global modes (~ivy-mode~, ~company-mode~, etc.)
+- ~emacs-startup-hook~ → Run completion tasks, display messages
+- ~window-setup-hook~ → Graphics-specific setup after frame is created

@@ -55,7 +55,7 @@
 
 
 (use-package js :ensure nil
-  :yes javascript
+  :module javascript
   :custom
   (js-indent-level 2 "Keep same to prettier"))
 
@@ -100,7 +100,7 @@
 
 
 (use-package plantuml-mode
-  :yes plantuml
+  :module plantuml
   :custom
   (plantuml-default-exec-mode 'executable)
   (plantuml-indent-level 4))

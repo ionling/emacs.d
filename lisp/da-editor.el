@@ -130,6 +130,30 @@
       (setq server-socket-dir (v-join-user-emacsd "server"))))
 
 
+;;;; Evil
+(use-package evil
+  :hook (v-editor . evil-mode)
+  :custom
+  (evil-undo-system 'undo-tree)
+  :config
+  (dolist (key '("C-a" "C-e" "C-n" "C-p" "C-d" "C-y"))
+    (define-key evil-insert-state-map (kbd key) nil))
+  (dolist (key '("C-e" "C-i"))
+    (define-key evil-motion-state-map (kbd key) nil))
+
+  (delete 'compilation-mode evil-motion-state-modes)
+  (setq evil-default-state 'emacs)
+  (setq evil-normal-state-modes
+        (-union evil-normal-state-modes
+                '(prog-mode text-mode org-mode conf-mode yaml-mode))))
+
+(use-package evil-escape
+  :hook evil-mode)
+
+(use-package evil-surround
+  :hook (evil-mode . global-evil-surround-mode))
+
+
 ;;;; Fill paragraph
 (use-package aggressive-fill-paragraph
   :disabled                             ; In favor of semantic linefeeds
