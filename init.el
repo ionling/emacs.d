@@ -80,8 +80,11 @@
 
 (yes-doom-ui)
 
+;; (yes-javascript)
+
+;; (yes-hydra)
+
 (v-load elisp
-        javascript
 
         hydra
         )
@@ -163,28 +166,43 @@ Refer https://emacs-china.org/t/topic/2808/24."
 (use-package key-assist)
 
 
-;;;;; Evil
-(use-package evil
-  :hook (v-editor . evil-mode)
-  :custom
-  (evil-undo-system 'undo-tree)
-  :config
-  (dolist (key '("C-a" "C-e" "C-n" "C-p" "C-d" "C-y"))
-    (define-key evil-insert-state-map (kbd key) nil))
-  (dolist (key '("C-e" "C-i"))
-    (define-key evil-motion-state-map (kbd key) nil))
+(defun yes-evil ()
+  "Enable evil-mode."
+  (interactive)
+  (use-package evil
+    :hook (v-editor . evil-mode)
+    :custom
+    (evil-undo-system 'undo-tree)
+    :config
+    (dolist (key '("C-a" "C-e" "C-n" "C-p" "C-d" "C-y"))
+      (define-key evil-insert-state-map (kbd key) nil))
+    (dolist (key '("C-e" "C-i"))
+      (define-key evil-motion-state-map (kbd key) nil))
+  
+    (delete 'compilation-mode evil-motion-state-modes)
+    (setq evil-default-state 'emacs)
+    (setq evil-normal-state-modes
+          (-union evil-normal-state-modes
+                  '(prog-mode text-mode org-mode conf-mode yaml-mode))))
+  
+  (use-package evil-escape
+    :hook evil-mode)
+  
+  (use-package evil-surround
+    :hook (evil-mode . global-evil-surround-mode)))
 
-  (delete 'compilation-mode evil-motion-state-modes)
-  (setq evil-default-state 'emacs)
-  (setq evil-normal-state-modes
-        (-union evil-normal-state-modes
-                '(prog-mode text-mode org-mode conf-mode yaml-mode))))
 
-(use-package evil-escape
-  :hook evil-mode)
+(yes-evil)
 
-(use-package evil-surround
-  :hook (evil-mode . global-evil-surround-mode))
+(setq org-id-files '("~/org/x.org"
+                     "~/org/pl.org"
+                     "~/org/snippets.org"
+                     "~/org/p.org"
+                     "~/org/l.org"
+                     "~/org/in.org"))
+
+
+
 
 (pcase (system-name)
   ("gamepc"

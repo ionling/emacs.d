@@ -10,7 +10,7 @@
 
 ;;; Code:
 
-(require 'v-pkg)
+(require 'ad-pkg)
 
 (v-require company)
 (v-require company-tabnine)

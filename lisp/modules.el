@@ -16,5 +16,5 @@
   :group 'v-mod
   :type 'boolean)
 
-(provide 'init-modules)
-;;; init-modules.el ends here
+(provide 'modules)
+;;; modules.el ends here

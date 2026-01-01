@@ -38,6 +38,7 @@
   (use-package macrostep)
 
   (use-package nameless
+    :disabled ; tmp
     :delight
     :hook (emacs-lisp-mode . nameless-mode)))
 
@@ -53,10 +54,10 @@
       (add-hook 'hy-mode-hook #'eldoc-box-hover-at-point-mode))))
 
 
-(v-defmodule javascript
-  (use-package js :ensure nil
-    :custom
-    (js-indent-level 2 "Keep same to prettier")))
+(use-package js :ensure nil
+  :yes javascript
+  :custom
+  (js-indent-level 2 "Keep same to prettier"))
 
 
 (v-defmodule jsx

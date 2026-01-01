@@ -16,7 +16,7 @@
 (require 'smartparens)
 
 (require 'v-org)
-(require 'v-pkg)
+(require 'ad-pkg)
 
 (v-require projectile)
 

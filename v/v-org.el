@@ -143,11 +143,18 @@ Without unwanted space when exporting `org-mode' to html."
         :disabled
         :quelpa (org-super-links :fetcher github :repo "toshism/org-super-links"))
 
+      (use-package org-clock-reminder
+        :defer 1
+        :config (org-clock-reminder-mode))
+
       (use-package org-super-agenda
         :hook (org-mode . org-super-agenda-mode)
         :custom
         (org-super-agenda-groups
          '((:tag "weekly")
+           (:tag "long")
+           (:tag "project")
+           (:tag "inbox")
            (:auto-category t)))))))
 
 ;;;###autoload

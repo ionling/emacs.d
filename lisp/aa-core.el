@@ -207,6 +207,7 @@ Keywords:
       use-package-always-ensure t)
 
 (use-package dash)
+(use-package f)
 
 (use-package gnu-elpa-keyring-update)
 
@@ -234,6 +235,9 @@ Keywords:
   :demand t
   :init
   (key-chord-mode 1))
+
+
+(use-package delight)
 
 (use-package which-key
   :delight

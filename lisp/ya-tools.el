@@ -116,7 +116,10 @@
   (setq ispell-dictionary "en"))
 
 
-(v-defmodule hydra
+
+(defun yes-hydra ()
+  (interactive)
+
   (use-package hydra)
 
   (use-package hydra-posframe
